@@ -37,11 +37,15 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.cmbFilters = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnGenerateImg = new System.Windows.Forms.Button();
             this.rdbSequential = new System.Windows.Forms.RadioButton();
             this.rdbParallelism = new System.Windows.Forms.RadioButton();
+            this.slider = new System.Windows.Forms.TrackBar();
+            this.lblMin = new System.Windows.Forms.Label();
+            this.lblMax = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.imgLoader1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgLoader2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.slider)).BeginInit();
             this.SuspendLayout();
             // 
             // imgLoader1
@@ -49,16 +53,18 @@
             this.imgLoader1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.imgLoader1.Location = new System.Drawing.Point(16, 38);
             this.imgLoader1.Name = "imgLoader1";
-            this.imgLoader1.Size = new System.Drawing.Size(463, 328);
+            this.imgLoader1.Size = new System.Drawing.Size(495, 328);
+            this.imgLoader1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.imgLoader1.TabIndex = 0;
             this.imgLoader1.TabStop = false;
             // 
             // imgLoader2
             // 
             this.imgLoader2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.imgLoader2.Location = new System.Drawing.Point(738, 38);
+            this.imgLoader2.Location = new System.Drawing.Point(909, 38);
             this.imgLoader2.Name = "imgLoader2";
-            this.imgLoader2.Size = new System.Drawing.Size(463, 328);
+            this.imgLoader2.Size = new System.Drawing.Size(495, 328);
+            this.imgLoader2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.imgLoader2.TabIndex = 1;
             this.imgLoader2.TabStop = false;
             // 
@@ -78,7 +84,7 @@
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(734, 12);
+            this.label2.Location = new System.Drawing.Point(905, 12);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(156, 23);
             this.label2.TabIndex = 3;
@@ -87,7 +93,7 @@
             // btnLoadImage
             // 
             this.btnLoadImage.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLoadImage.Location = new System.Drawing.Point(540, 87);
+            this.btnLoadImage.Location = new System.Drawing.Point(632, 61);
             this.btnLoadImage.Name = "btnLoadImage";
             this.btnLoadImage.Size = new System.Drawing.Size(143, 37);
             this.btnLoadImage.TabIndex = 1;
@@ -114,7 +120,7 @@
             "Compresión",
             "Segmentación",
             "Textura"});
-            this.cmbFilters.Location = new System.Drawing.Point(504, 168);
+            this.cmbFilters.Location = new System.Drawing.Point(591, 144);
             this.cmbFilters.Name = "cmbFilters";
             this.cmbFilters.Size = new System.Drawing.Size(228, 30);
             this.cmbFilters.TabIndex = 2;
@@ -124,31 +130,32 @@
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(500, 142);
+            this.label3.Location = new System.Drawing.Point(639, 118);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(136, 23);
             this.label3.TabIndex = 6;
             this.label3.Text = "Filters to apply";
             // 
-            // button1
+            // btnGenerateImg
             // 
-            this.button1.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(514, 306);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(198, 37);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "Generate image";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnGenerateImg.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGenerateImg.Location = new System.Drawing.Point(605, 306);
+            this.btnGenerateImg.Name = "btnGenerateImg";
+            this.btnGenerateImg.Size = new System.Drawing.Size(198, 37);
+            this.btnGenerateImg.TabIndex = 6;
+            this.btnGenerateImg.Text = "Generate image";
+            this.btnGenerateImg.UseVisualStyleBackColor = true;
+            this.btnGenerateImg.Click += new System.EventHandler(this.btnGenerateImg_Click);
             // 
             // rdbSequential
             // 
             this.rdbSequential.AutoSize = true;
             this.rdbSequential.BackColor = System.Drawing.Color.Transparent;
             this.rdbSequential.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rdbSequential.Location = new System.Drawing.Point(522, 224);
+            this.rdbSequential.Location = new System.Drawing.Point(577, 259);
             this.rdbSequential.Name = "rdbSequential";
             this.rdbSequential.Size = new System.Drawing.Size(114, 26);
-            this.rdbSequential.TabIndex = 10;
+            this.rdbSequential.TabIndex = 4;
             this.rdbSequential.TabStop = true;
             this.rdbSequential.Text = "Sequential";
             this.rdbSequential.UseVisualStyleBackColor = false;
@@ -158,23 +165,56 @@
             this.rdbParallelism.AutoSize = true;
             this.rdbParallelism.BackColor = System.Drawing.Color.Transparent;
             this.rdbParallelism.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rdbParallelism.Location = new System.Drawing.Point(522, 251);
+            this.rdbParallelism.Location = new System.Drawing.Point(712, 259);
             this.rdbParallelism.Name = "rdbParallelism";
             this.rdbParallelism.Size = new System.Drawing.Size(122, 26);
-            this.rdbParallelism.TabIndex = 11;
+            this.rdbParallelism.TabIndex = 5;
             this.rdbParallelism.TabStop = true;
             this.rdbParallelism.Text = "Parallelism";
             this.rdbParallelism.UseVisualStyleBackColor = false;
+            // 
+            // slider
+            // 
+            this.slider.BackColor = System.Drawing.Color.Linen;
+            this.slider.Location = new System.Drawing.Point(615, 192);
+            this.slider.Name = "slider";
+            this.slider.Size = new System.Drawing.Size(179, 56);
+            this.slider.TabIndex = 3;
+            // 
+            // lblMin
+            // 
+            this.lblMin.AutoSize = true;
+            this.lblMin.BackColor = System.Drawing.Color.Transparent;
+            this.lblMin.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMin.Location = new System.Drawing.Point(519, 203);
+            this.lblMin.Name = "lblMin";
+            this.lblMin.Size = new System.Drawing.Size(72, 22);
+            this.lblMin.TabIndex = 13;
+            this.lblMin.Text = "Minimo";
+            // 
+            // lblMax
+            // 
+            this.lblMax.AutoSize = true;
+            this.lblMax.BackColor = System.Drawing.Color.Transparent;
+            this.lblMax.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMax.Location = new System.Drawing.Point(818, 203);
+            this.lblMax.Name = "lblMax";
+            this.lblMax.Size = new System.Drawing.Size(75, 22);
+            this.lblMax.TabIndex = 14;
+            this.lblMax.Text = "Maximo";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(1217, 681);
+            this.ClientSize = new System.Drawing.Size(1418, 681);
+            this.Controls.Add(this.lblMax);
+            this.Controls.Add(this.lblMin);
+            this.Controls.Add(this.slider);
             this.Controls.Add(this.rdbParallelism);
             this.Controls.Add(this.rdbSequential);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnGenerateImg);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbFilters);
             this.Controls.Add(this.btnLoadImage);
@@ -187,6 +227,7 @@
             this.Text = "Image filters OS";
             ((System.ComponentModel.ISupportInitialize)(this.imgLoader1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgLoader2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.slider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -202,9 +243,12 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ComboBox cmbFilters;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnGenerateImg;
         private System.Windows.Forms.RadioButton rdbSequential;
         private System.Windows.Forms.RadioButton rdbParallelism;
+        private System.Windows.Forms.TrackBar slider;
+        private System.Windows.Forms.Label lblMin;
+        private System.Windows.Forms.Label lblMax;
     }
 }
 
