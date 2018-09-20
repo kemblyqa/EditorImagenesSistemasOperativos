@@ -10,38 +10,19 @@ namespace EditorImagenes_Proyecto1
 {
     class SequentialImageFilter
     {
-        //grayscale **
+        //grayscale
         public static void grayScale(string[] imagesList)
         {
             for (int i = 0; i < imagesList.Length; i++)
             {
                 Bitmap bitmap = new Bitmap(imagesList[i]);
-                //get image dimension
-                int width = bitmap.Width;
-                int height = bitmap.Height;
-
-                //color of pixel
-                Color p;
-
-                //grayscale
-                for (int y = 0; y < height; y++)
+                for (int y = 0; y < bitmap.Height; y++)
                 {
-                    for (int x = 0; x < width; x++)
+                    for (int x = 0; x < bitmap.Width; x++)
                     {
-                        //get pixel value
-                        p = bitmap.GetPixel(x, y);
-
-                        //extract pixel component ARGB
-                        int a = p.A;
-                        int r = p.R;
-                        int g = p.G;
-                        int b = p.B;
-
-                        //find average
-                        int avg = (r + g + b) / 3;
-
                         //set new pixel value
-                        bitmap.SetPixel(x, y, Color.FromArgb(a, avg, avg, avg));
+                        int avg = PixelFilters.averageColorFilter(bitmap.GetPixel(x, y));
+                        bitmap.SetPixel(x, y, Color.FromArgb(bitmap.GetPixel(x, y).A, avg, avg, avg));
                     }
                 }
                 //save (write) sepia image
@@ -50,8 +31,22 @@ namespace EditorImagenes_Proyecto1
         }
 
         //brigth **
-        public static void brigthness(string[] imagesList)
+        public static void brigthness(string[] imagesList, float brightPercentage)
         {
+            for (int i = 0; i < imagesList.Length; i++)
+            {
+                Bitmap bitmap = new Bitmap(imagesList[i]);
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    for (int x = 0; x < bitmap.Width; x++)
+                    {
+                        bitmap.SetPixel(x, y, PixelFilters.brightnessFilter(bitmap.GetPixel(x, y), brightPercentage / 100));
+                    }
+                }
+                //save (write) sepia image
+                bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
+            }
+
         }
         //texture **
         public static void texture(string[] imagesList)

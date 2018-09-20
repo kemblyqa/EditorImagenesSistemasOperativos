@@ -61,7 +61,7 @@
             "Segmentación",
             "Textura"});
             this.cmbFilters.Location = new System.Drawing.Point(71, 48);
-            this.cmbFilters.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmbFilters.Margin = new System.Windows.Forms.Padding(2);
             this.cmbFilters.Name = "cmbFilters";
             this.cmbFilters.Size = new System.Drawing.Size(172, 27);
             this.cmbFilters.TabIndex = 2;
@@ -82,7 +82,7 @@
             // 
             this.btnGenerateImg.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGenerateImg.Location = new System.Drawing.Point(71, 249);
-            this.btnGenerateImg.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnGenerateImg.Margin = new System.Windows.Forms.Padding(2);
             this.btnGenerateImg.Name = "btnGenerateImg";
             this.btnGenerateImg.Size = new System.Drawing.Size(148, 30);
             this.btnGenerateImg.TabIndex = 6;
@@ -96,7 +96,7 @@
             this.rdbSequential.BackColor = System.Drawing.Color.Transparent;
             this.rdbSequential.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rdbSequential.Location = new System.Drawing.Point(50, 210);
-            this.rdbSequential.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rdbSequential.Margin = new System.Windows.Forms.Padding(2);
             this.rdbSequential.Name = "rdbSequential";
             this.rdbSequential.Size = new System.Drawing.Size(89, 23);
             this.rdbSequential.TabIndex = 4;
@@ -110,7 +110,7 @@
             this.rdbParallelism.BackColor = System.Drawing.Color.Transparent;
             this.rdbParallelism.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rdbParallelism.Location = new System.Drawing.Point(151, 210);
-            this.rdbParallelism.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rdbParallelism.Margin = new System.Windows.Forms.Padding(2);
             this.rdbParallelism.Name = "rdbParallelism";
             this.rdbParallelism.Size = new System.Drawing.Size(91, 23);
             this.rdbParallelism.TabIndex = 5;
@@ -122,9 +122,10 @@
             // 
             this.slider.BackColor = System.Drawing.Color.Linen;
             this.slider.Location = new System.Drawing.Point(87, 121);
-            this.slider.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.slider.Margin = new System.Windows.Forms.Padding(2);
+            this.slider.Minimum = -10;
             this.slider.Name = "slider";
-            this.slider.Size = new System.Drawing.Size(134, 45);
+            this.slider.Size = new System.Drawing.Size(265, 45);
             this.slider.TabIndex = 3;
             // 
             // lblMin
@@ -144,7 +145,7 @@
             this.lblMax.AutoSize = true;
             this.lblMax.BackColor = System.Drawing.Color.Transparent;
             this.lblMax.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMax.Location = new System.Drawing.Point(240, 130);
+            this.lblMax.Location = new System.Drawing.Point(377, 130);
             this.lblMax.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblMax.Name = "lblMax";
             this.lblMax.Size = new System.Drawing.Size(59, 19);
@@ -166,7 +167,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbFilters);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Image filters OS";
             ((System.ComponentModel.ISupportInitialize)(this.slider)).EndInit();

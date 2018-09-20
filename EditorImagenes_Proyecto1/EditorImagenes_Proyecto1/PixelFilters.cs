@@ -48,5 +48,29 @@ namespace EditorImagenes_Proyecto1
                 Convert.ToInt32(opacity * pixel.A > 255 ? 255 : opacity * pixel.A < 0 ? 0 : opacity * pixel.A),
                 pixel.R, pixel.G, pixel.B);
         }
+
+        //average
+        public static int averageColorFilter(Color pixel)
+        {
+            return (pixel.R + pixel.G + pixel.B) / 3;
+        }
+
+        //brightness
+        public static Color brightnessFilter(Color pixel, float brightPercentage)
+        {
+            return brightPercentage < 0 ?
+                Color.FromArgb(
+                pixel.A,
+                (int)((1 + brightPercentage) * pixel.R),
+                (int)((1 + brightPercentage) * pixel.G),
+                (int)((1 + brightPercentage) * pixel.B))
+                :
+                Color.FromArgb(
+                pixel.A, 
+                (int)((255 - pixel.R) * brightPercentage + pixel.R),
+                (int)((255 - pixel.G) * brightPercentage + pixel.G),
+                (int)((255 - pixel.B) * brightPercentage + pixel.B)
+           );
+        }
     }
 }

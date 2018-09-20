@@ -31,6 +31,12 @@ namespace EditorImagenes_Proyecto1
                 case 1:
                     SequentialImageFilter.sepia(imagesList);
                     break;
+                case 5:
+                    SequentialImageFilter.brigthness(imagesList, slider.Value);
+                    break;
+                case 8:
+                    SequentialImageFilter.texture(imagesList);
+                    break;
                 default:
                     //
                     break;
