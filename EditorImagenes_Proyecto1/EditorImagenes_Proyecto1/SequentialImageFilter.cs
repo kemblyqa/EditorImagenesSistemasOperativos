@@ -61,7 +61,7 @@ namespace EditorImagenes_Proyecto1
         /// <summary>
         /// Function where we will apply the sepia filter to the loaded image
         /// </summary>
-        public static void sepiaFunction(string[] imagesList)
+        public static void sepia(string[] imagesList)
         {
             for (int i = 0; i < imagesList.Length; i++)
             {
