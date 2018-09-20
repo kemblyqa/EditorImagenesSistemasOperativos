@@ -33,22 +33,29 @@ namespace EditorImagenes_Proyecto1
             {
                 imgLoader1.Image = Image.FromFile(openFileDialog1.FileName);
                 this.pathImg = openFileDialog1.FileName; // set the img path
-
             }
         }
 
         private void btnGenerateImg_Click(object sender, EventArgs e)
         {
+            string currentDirName = System.IO.Directory.GetCurrentDirectory();
+            Console.WriteLine(Directory.GetParent(Environment.CurrentDirectory));
+            // images files
+            //string[] imagesList = Directory.GetFiles(Directory.GetParent(Environment.CurrentDirectory) + "\\InputImages\\");
+
+            string[] imagesList = Directory.GetFiles(@"InputImages\\");
             //load original image in picturebox1
-            imgLoader1.Image = Image.FromFile(this.pathImg);
+
+            
+            //imgLoader1.Image = Image.FromFile(imagesList);
 
             switch (cmbFilters.SelectedIndex)
             {
                 case 0:
-                    //
+                    SequentialImageFilter.grayScale(imagesList);
                     break;
                 case 1:
-                    SequentialImageFilter.sepiaFunction(this.pathImg);
+                    SequentialImageFilter.sepiaFunction(imagesList);
                     break;
                 default:
                     //
