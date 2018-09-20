@@ -129,5 +129,20 @@ namespace EditorImagenes_Proyecto1
                 }
             }
         }
+
+        public Bitmap opacityFilter(ref Bitmap img, float opacity)
+        {
+            Bitmap product = new Bitmap(img.Width, img.Height);
+            for (int x = 0; x < img.Height; x++)
+                for (int y = 0; y < img.Width; y++)
+                {
+                    product.SetPixel(x, y, PixelFilters.opacityFilter(product.GetPixel(x, y), opacity));
+                }
+            return product;
+        }
+        public Bitmap segmentationFilter(Bitmap img)
+        {
+            return img;
+        }
     }
 }
