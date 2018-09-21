@@ -14,6 +14,7 @@ namespace EditorImagenes_Proyecto1
         [STAThread]
         static void Main()
         {
+            System.IO.Directory.CreateDirectory("C:\\Imagenes_KemAlbEli"); // folder to storage the image filters
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
