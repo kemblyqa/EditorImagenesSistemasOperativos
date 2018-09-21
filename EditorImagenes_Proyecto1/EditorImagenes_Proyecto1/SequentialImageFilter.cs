@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -46,11 +47,11 @@ namespace EditorImagenes_Proyecto1
                 //save (write) sepia image
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
-
         }
         //texture **
         public static void texture(string[] imagesList)
         {
+            
         }
 
         /// <summary>
@@ -119,9 +120,9 @@ namespace EditorImagenes_Proyecto1
                         //set the new RGB value in image pixel
                         bmp.SetPixel(x, y, Color.FromArgb(a, r, g, b));
                     }
-                    //save (write) sepia image
-                    bmp.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
                 }
+                //save (write) sepia image
+                bmp.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
 
@@ -155,6 +156,23 @@ namespace EditorImagenes_Proyecto1
                     }
                 //save (write) segmented image
                 product.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
+            }
+        }
+
+        public static void sharpenEffect(string[] imagesList)
+        {
+            for (int i = 0; i < imagesList.Length; i++)
+            {
+                Bitmap bitmap = new Bitmap(imagesList[i]);
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    for (int x = 0; x < bitmap.Width; x++)
+                    {
+                        bitmap.SetPixel(x, y, PixelFilters.brightnessFilter(bitmap.GetPixel(x, y), brightPercentage / 100));
+                    }
+                }
+                //save (write) sepia image
+                bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
     }
