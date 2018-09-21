@@ -26,6 +26,7 @@ namespace EditorImagenes_Proyecto1
         {
             // images files
             string[] imagesList = Directory.GetFiles(@"InputImages\\");
+            FilterMonitor.refresh();
             switch (cmbFilters.SelectedIndex)
             {
                 case 0:
@@ -38,7 +39,13 @@ namespace EditorImagenes_Proyecto1
                         Console.WriteLine("Llamar funcion con threads");
                     break;
                 case 2:
-                    SequentialImageFilter.opacityFilter(imagesList, (float)(slider.Value + 10) / (float)20);
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.opacity((float)(5) / (float)20);
+                    }
+                    else
+                        SequentialImageFilter.opacityFilter(imagesList, (float)(5) / (float)20);
                     break;
                 case 3:
                     if (rdbSequential.Checked)
