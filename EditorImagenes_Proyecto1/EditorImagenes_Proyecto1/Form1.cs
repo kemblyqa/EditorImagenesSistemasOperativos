@@ -21,6 +21,8 @@ namespace EditorImagenes_Proyecto1
 
         private void btnGenerateImg_Click(object sender, EventArgs e)
         {
+            btnGenerateImg.Enabled = false;
+
             // images files
             string[] imagesList = Directory.GetFiles(@"InputImages\\");
             switch (cmbFilters.SelectedIndex)
@@ -31,8 +33,14 @@ namespace EditorImagenes_Proyecto1
                 case 1:
                     SequentialImageFilter.sepia(imagesList);
                     break;
+                case 2:
+                    SequentialImageFilter.opacityFilter(imagesList, (float)(slider.Value + 10) / (float)20);
+                    break;
                 case 5:
                     SequentialImageFilter.brigthness(imagesList, slider.Value);
+                    break;
+                case 7:
+                    SequentialImageFilter.segmentationFilter(imagesList, 21-(slider.Value + 10));
                     break;
                 case 8:
                     SequentialImageFilter.texture(imagesList);
@@ -41,6 +49,7 @@ namespace EditorImagenes_Proyecto1
                     //
                     break;
             }
+            btnGenerateImg.Enabled = true;
         }
     }    
 }

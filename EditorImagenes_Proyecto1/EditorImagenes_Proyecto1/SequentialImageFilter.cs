@@ -125,19 +125,37 @@ namespace EditorImagenes_Proyecto1
             }
         }
 
-        public Bitmap opacityFilter(ref Bitmap img, float opacity)
+        public static void opacityFilter(string[] imagesList, float opacity)
         {
-            Bitmap product = new Bitmap(img.Width, img.Height);
-            for (int x = 0; x < img.Height; x++)
-                for (int y = 0; y < img.Width; y++)
-                {
-                    product.SetPixel(x, y, PixelFilters.opacityFilter(product.GetPixel(x, y), opacity));
-                }
-            return product;
+            for (int i = 0; i < imagesList.Length; i++)
+            {
+                Bitmap img = new Bitmap(imagesList[i]);
+                Bitmap product = new Bitmap(img.Width, img.Height);
+                Console.WriteLine(product.Width + "," + product.Height);
+                for (int x = 0; x < img.Width; x++)
+                    for (int y = 0; y < img.Height; y++)
+                    {
+                        product.SetPixel(x, y, PixelFilters.opacityFilter(img.GetPixel(x, y), opacity));
+                    }
+                //save (write) sepia image, i mean, opacity image
+                product.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
+            }
         }
-        public Bitmap segmentationFilter(Bitmap img)
+        public static void segmentationFilter(string[] imagesList, int segmentSize)
         {
-            return img;
+            for (int i = 0; i < imagesList.Length; i++)
+            {
+                Console.WriteLine(imagesList[i]);
+                Bitmap img = new Bitmap(imagesList[i]);
+                Bitmap product = new Bitmap(img.Width, img.Height);
+                for (int x = 0; x < img.Width; x++)
+                    for (int y = 0; y < img.Height; y++)
+                    {
+                        product.SetPixel(x, y, PixelFilters.segmentationFilter(img.GetPixel(x, y), segmentSize));
+                    }
+                //save (write) segmented image
+                product.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
+            }
         }
     }
 }

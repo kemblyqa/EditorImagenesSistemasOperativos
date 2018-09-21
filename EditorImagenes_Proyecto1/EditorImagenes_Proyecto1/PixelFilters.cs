@@ -45,8 +45,20 @@ namespace EditorImagenes_Proyecto1
         public static Color opacityFilter(Color pixel, float opacity)
         {
             return Color.FromArgb(
-                Convert.ToInt32(opacity * pixel.A > 255 ? 255 : opacity * pixel.A < 0 ? 0 : opacity * pixel.A),
+                Convert.ToInt32(opacity * pixel.A > 255 ? 255 : opacity * pixel.A < 1 ? 1 : opacity * pixel.A),
                 pixel.R, pixel.G, pixel.B);
+        }
+
+        //Applies an opacity Filter over a pixel
+        public static Color segmentationFilter(Color pixel, int segmentation)
+        {
+            int factor = 255 / segmentation;
+            return Color.FromArgb(
+                pixel.A,
+                pixel.R % factor <= factor / 2 ? pixel.R - pixel.R % factor : pixel.R + factor - (pixel.R % factor),
+                pixel.G % factor <= factor / 2 ? pixel.G - pixel.G % factor : pixel.G + factor - (pixel.G % factor),
+                pixel.B % factor <= factor / 2 ? pixel.B - pixel.B % factor : pixel.B + factor - (pixel.B % factor)
+                );
         }
 
         //average
