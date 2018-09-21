@@ -40,39 +40,33 @@ namespace EditorImagenes_Proyecto1
                 imageCounter.Add(aux.Width * aux.Height);
             }
         }
-        public class getter
+        //X,Y and image number
+        public static Tuple<int, int, int> getNext()
         {
-            //X,Y and image number
-            public Tuple<int, int, int> getNext()
+            if (nextImg >= imageList.Count)
+                return null;
+            Tuple<int, int, int> value = new Tuple<int, int, int>(nextx, nexty, nextImg);
+            nextx++;
+            if (nextx == imageList[nextImg].Width)
             {
-                if (nextImg >= imageList.Count)
-                    return null;
-                Tuple<int, int, int> value = new Tuple<int, int, int>(nextx, nexty, nextImg);
-                nextx++;
-                if (nextx == imageList[nextImg].Width)
-                {
-                    nextx = 0;
-                    nexty++;
-                }
-                if (nexty == imageList[nextImg].Height)
-                {
-                    nexty = 0;
-                    nextImg++;
-                }
-                return value;
+                nextx = 0;
+                nexty++;
             }
-        }
-        public class setter
-        {
-            public void setPixel(int imgTarget, Color pixel, Tuple<int, int> coord)
+            if (nexty == imageList[nextImg].Height)
             {
-                imageOut[imgTarget].SetPixel(coord.Item1, coord.Item2, pixel);
-                imageCounter[imgTarget]--;
-                if (imageCounter[imgTarget] == 0)
-                {
-                    imageOut[imgTarget].Save(@"OutputImages\\" + Path.GetFileName(imageStr[imgTarget]));
-                    Console.WriteLine("Guardando " + imgTarget);
-                }
+                nexty = 0;
+                nextImg++;
+            }
+            return value;
+        }
+        public static void setPixel(int imgTarget, Color pixel, Tuple<int, int> coord)
+        {
+            imageOut[imgTarget].SetPixel(coord.Item1, coord.Item2, pixel);
+            imageCounter[imgTarget]--;
+            if (imageCounter[imgTarget] == 0)
+            {
+                imageOut[imgTarget].Save(@"OutputImages\\" + Path.GetFileName(imageStr[imgTarget]));
+                Console.WriteLine("Guardando " + imgTarget);
             }
         }
     }
