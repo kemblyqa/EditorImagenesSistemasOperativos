@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EditorImagenes_Proyecto1
@@ -43,31 +44,52 @@ namespace EditorImagenes_Proyecto1
         //X,Y and image number
         public static Tuple<int, int, int> getNext()
         {
-            if (nextImg >= imageList.Count)
-                return null;
-            Tuple<int, int, int> value = new Tuple<int, int, int>(nextx, nexty, nextImg);
-            nextx++;
-            if (nextx == imageList[nextImg].Width)
+            Monitor.Enter(imageList);
+            try
             {
-                nextx = 0;
-                nexty++;
+                if (nextImg >= imageList.Count)
+                    return null;
+                Tuple<int, int, int> value = new Tuple<int, int, int>(nextx, nexty, nextImg);
+                nextx++;
+                if (nextx == imageList[nextImg].Width)
+                {
+                    nextx = 0;
+                    nexty++;
+                }
+                if (nexty == imageList[nextImg].Height)
+                {
+                    nexty = 0;
+                    nextImg++;
+                }
+                return value;
             }
-            if (nexty == imageList[nextImg].Height)
+            finally
             {
-                nexty = 0;
-                nextImg++;
+                Monitor.Exit(imageList);
             }
-            return value;
         }
         public static void setPixel(int imgTarget, Color pixel, Tuple<int, int> coord)
         {
-            imageOut[imgTarget].SetPixel(coord.Item1, coord.Item2, pixel);
-            imageCounter[imgTarget]--;
-            if (imageCounter[imgTarget] == 0)
-            {
-                imageOut[imgTarget].Save(@"OutputImages\\" + Path.GetFileName(imageStr[imgTarget]));
-                Console.WriteLine("Guardando " + imgTarget);
+            Monitor.Enter(imageOut);
+
+            try{
+                imageOut[imgTarget].SetPixel(coord.Item1, coord.Item2, pixel);
+                imageCounter[imgTarget]--;
+                if (imageCounter[imgTarget] == 0)
+                {
+                    imageOut[imgTarget].Save(@"OutputImages\\" + Path.GetFileName(imageStr[imgTarget]));
+                    Console.WriteLine("Guardando " + imgTarget);
+                }
             }
+            finally
+            {
+                Monitor.Exit(imageOut);
+            }
+        }
+        public static Color getPixel(int x, int y, int img)
+        {
+            lock (imageList)
+                return imageList[img].GetPixel(x, y);
         }
     }
 }
