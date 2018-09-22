@@ -25,11 +25,20 @@ namespace EditorImagenes_Proyecto1
         private void btnGenerateImg_Click(object sender, EventArgs e)
         {
             // images files
+            btnGenerateImg.Enabled = false;
             string[] imagesList = Directory.GetFiles(@"InputImages\\");
+            FilterMonitor.refresh();
+            float percent = 0;
             switch (cmbFilters.SelectedIndex)
             {
                 case 0:
-                    SequentialImageFilter.grayScale(imagesList);
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.grayScale();
+                    }
+                    else
+                        SequentialImageFilter.grayScale(imagesList);
                     break;
                 case 1:
                     if (rdbSequential.Checked)
@@ -38,7 +47,14 @@ namespace EditorImagenes_Proyecto1
                         Console.WriteLine("Llamar funcion con threads");
                     break;
                 case 2:
-                    SequentialImageFilter.opacityFilter(imagesList, (float)(slider.Value + 10) / (float)20);
+                    percent = (slider.Value + 64) / 128f;
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.opacity(percent);
+                    }
+                    else
+                        SequentialImageFilter.opacityFilter(imagesList, percent);
                     break;
                 case 3:
                     if (rdbSequential.Checked)
@@ -47,27 +63,60 @@ namespace EditorImagenes_Proyecto1
                         Console.WriteLine("Llamar funcion con threads");
                     break;
                 case 4:
+                    percent = (slider.Value + 64) / 128f;
                     if (rdbSequential.Checked)
-                        Console.WriteLine("Llamar funcion secuencial");
+                        SequentialImageFilter.gaussianFilter(imagesList, (int)percent * 5);
                     else
-                        Console.WriteLine("Llamar funcion con threads");
+                        SequentialImageFilter.gaussianFilter(imagesList, (int)percent * 5);
                     break;
                 case 5:
-                    SequentialImageFilter.brigthness(imagesList, slider.Value);
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.brigthness(slider.Value);
+                    }
+                    else
+                        SequentialImageFilter.brigthness(imagesList, slider.Value);
                     break;
                 case 6:
                     // Compresión
                     break;
                 case 7:
-                    SequentialImageFilter.segmentationFilter(imagesList, 21-(slider.Value + 10));
+                    int segments = (int)(((slider.Value+64)*7)/128f);
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.segmentation((int)Math.Pow(2, segments));
+                    }
+                    else
+                        SequentialImageFilter.segmentationFilter(imagesList, (int)Math.Pow(2, segments));
                     break;
                 case 8:
                     SequentialImageFilter.texture(imagesList);
-                    break;                
+                    break;
+                case 9:
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.gammaFilter(slider.Value);
+                    }
+                    else
+                        SequentialImageFilter.gammaFilter(imagesList, slider.Value);
+                    break;
+                case 10:
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.contrastFilter(slider.Value);
+                    }
+                    else
+                        SequentialImageFilter.contrastFilter(imagesList, slider.Value);
+                    break;
                 default:
                     Console.WriteLine("Error detectado");
                     break;
             }
+            btnGenerateImg.Enabled = true;
         }
 
         private void slider_ValueChanged(object sender, EventArgs e)
@@ -78,13 +127,13 @@ namespace EditorImagenes_Proyecto1
 
         private void cmbFilters_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(cmbFilters.SelectedIndex == 6)
+            if(cmbFilters.SelectedIndex == 0 || cmbFilters.SelectedIndex == 1 || cmbFilters.SelectedIndex == 3)
             {
-                panelCompress.Visible = true;
+                panelCompress.Visible = false;
             }
             else
             {
-                panelCompress.Visible = false;
+                panelCompress.Visible = true;
             }
         }
     }    

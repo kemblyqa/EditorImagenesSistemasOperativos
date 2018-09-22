@@ -52,19 +52,45 @@ namespace EditorImagenes_Proyecto1
         //Applies an opacity Filter over a pixel
         public static Color segmentationFilter(Color pixel, int segmentation)
         {
-            int factor = 255 / segmentation;
+            int factor = segmentation == 1 ? 1 : segmentation-1;
+
             return Color.FromArgb(
                 pixel.A,
-                pixel.R % factor <= factor / 2 ? pixel.R - pixel.R % factor : pixel.R + factor - (pixel.R % factor),
-                pixel.G % factor <= factor / 2 ? pixel.G - pixel.G % factor : pixel.G + factor - (pixel.G % factor),
-                pixel.B % factor <= factor / 2 ? pixel.B - pixel.B % factor : pixel.B + factor - (pixel.B % factor)
+                pixel.R % factor <= factor / 2 ? pixel.R - pixel.R % factor : Math.Min(pixel.R + factor - (pixel.R % factor), 255),
+                pixel.G % factor <= factor / 2 ? pixel.G - pixel.G % factor : Math.Min(pixel.G + factor - (pixel.G % factor), 255),
+                pixel.B % factor <= factor / 2 ? pixel.B - pixel.B % factor : Math.Min(pixel.B + factor - (pixel.B % factor), 255)
                 );
         }
-
+        //Gauss
+        public static Color Gauss(ref Bitmap img, int x, int y, int radious)
+        {
+            int xLimit = x + radious < img.Width ? x + radious : img.Width - 1;
+            int yLimit = y + radious < img.Height ? y + radious : img.Height - 1;
+            int r = 0;int g = 0;int b = 0;
+            Color aux;
+            int c = 0;
+            for (int w = (Math.Abs(x - radious) + (x - radious)) / 2; w < xLimit; w++)
+                for(int h = (Math.Abs(y-radious) + (y-radious))/2; h < yLimit; h++)
+                {
+                    aux = img.GetPixel(w, h);
+                    r += aux.R;
+                    g += aux.G;
+                    b += aux.B;
+                    c++;
+                }
+            return Color.FromArgb(r/c, g/c, b/c);
+        }
         //average
         public static int averageColorFilter(Color pixel)
         {
             return (pixel.R + pixel.G + pixel.B) / 3;
+        }
+
+        public static Color grayScaleFilter(Color pixel)
+        {
+            //set new pixel value
+            int avg = averageColorFilter(pixel);
+            return Color.FromArgb(pixel.A, avg, avg, avg);
         }
 
         //brightness
@@ -83,6 +109,53 @@ namespace EditorImagenes_Proyecto1
                 (int)((255 - pixel.G) * brightPercentage + pixel.G),
                 (int)((255 - pixel.B) * brightPercentage + pixel.B)
            );
+        }
+
+        public static Color gammaFilter(Color pixel, float gammaPercentage)
+        {    
+            byte[] redGamma = createGammaArray(gammaPercentage);
+            byte[] greenGamma = createGammaArray(gammaPercentage);
+            byte[] blueGamma = createGammaArray(gammaPercentage);
+
+            return Color.FromArgb(
+                pixel.A,
+                redGamma[pixel.R],
+                greenGamma[pixel.G],
+                blueGamma[pixel.B]
+                );
+        }
+
+        public static byte[] createGammaArray(float color)
+        {
+            byte[] gammaArray = new byte[256];
+            for (int i = 0; i < 256; ++i)
+            {
+                gammaArray[i] = (byte) Math.Min(255, (int)((255.0 * Math.Pow(i / 255.0, 1.0 / color)) + 0.5));
+            }
+            return gammaArray;
+        }
+        
+
+        public static int adjustConstrast(float pixelItem, float contrastPercentage)
+        {
+            float pI = pixelItem / 255f;
+            pI -= 0.5f;
+            pI *= contrastPercentage;
+            pI += 0.5f;
+            pI *= 255;
+            if (pI < 0) pI = 0;
+            if (pI > 255) pI = 255;
+            return (int) pI;
+        }
+
+        public static Color contrastFilter(Color pixel, float gammaPercentage)
+        {
+            return Color.FromArgb(
+                pixel.A,
+                adjustConstrast(pixel.R, gammaPercentage),
+                adjustConstrast(pixel.G, gammaPercentage),
+                adjustConstrast(pixel.B, gammaPercentage)
+            );
         }
     }
 }

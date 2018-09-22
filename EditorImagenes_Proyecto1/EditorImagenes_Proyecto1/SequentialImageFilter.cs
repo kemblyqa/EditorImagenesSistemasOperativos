@@ -111,9 +111,7 @@ namespace EditorImagenes_Proyecto1
                 {
                     for (int x = 0; x < bitmap.Width; x++)
                     {
-                        //set new pixel value
-                        int avg = PixelFilters.averageColorFilter(bitmap.GetPixel(x, y));
-                        bitmap.SetPixel(x, y, Color.FromArgb(bitmap.GetPixel(x, y).A, avg, avg, avg));
+                        bitmap.SetPixel(x, y, PixelFilters.grayScaleFilter(bitmap.GetPixel(x, y)));
                     }
                 }
                 //save (write) sepia image
@@ -224,7 +222,6 @@ namespace EditorImagenes_Proyecto1
             {
                 Bitmap img = new Bitmap(imagesList[i]);
                 Bitmap product = new Bitmap(img.Width, img.Height);
-                Console.WriteLine(product.Width + "," + product.Height);
                 for (int x = 0; x < img.Width; x++)
                     for (int y = 0; y < img.Height; y++)
                     {
@@ -240,7 +237,6 @@ namespace EditorImagenes_Proyecto1
         {
             for (int i = 0; i < imagesList.Length; i++)
             {
-                Console.WriteLine(imagesList[i]);
                 Bitmap img = new Bitmap(imagesList[i]);
                 Bitmap product = new Bitmap(img.Width, img.Height);
                 for (int x = 0; x < img.Width; x++)
@@ -253,10 +249,25 @@ namespace EditorImagenes_Proyecto1
             }
         }
 
-
-        public static void sharpenEffect(string[] imagesList)
+        public static void gaussianFilter(string[] imagesList, int radious)
         {
-            int brightPercentage = 0; // daba error entonces cree esta variable porque no existia
+            for (int i = 0; i < imagesList.Length; i++)
+            {
+                Bitmap img = new Bitmap(imagesList[i]);
+                Bitmap product = new Bitmap(img.Width, img.Height);
+                for (int x = 0; x < img.Width; x++)
+                    for (int y = 0; y < img.Height; y++)
+                    {
+                        product.SetPixel(x, y, PixelFilters.Gauss(ref img, x, y, radious));
+                    }
+                //save (write) gaussian image
+                product.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
+            }
+        }
+        public static void gammaFilter(string[] imagesList, float gammaPercentage)
+        {
+            gammaPercentage = ((gammaPercentage + 64f) / 127f) * 5;
+            //Console.WriteLine(((gammaPercentage + 64f) / 127f) * 5);
             for (int i = 0; i < imagesList.Length; i++)
             {
                 Bitmap bitmap = new Bitmap(imagesList[i]);
@@ -264,7 +275,26 @@ namespace EditorImagenes_Proyecto1
                 {
                     for (int x = 0; x < bitmap.Width; x++)
                     {
-                        bitmap.SetPixel(x, y, PixelFilters.brightnessFilter(bitmap.GetPixel(x, y), brightPercentage / 100));
+                        bitmap.SetPixel(x, y, PixelFilters.gammaFilter(bitmap.GetPixel(x, y), gammaPercentage));
+                    }
+                }
+                //save (write) sepia image
+                bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
+            }
+        }
+
+        public static void contrastFilter(string[] imagesList, float contrastPercentage)
+        {
+            contrastPercentage = ((contrastPercentage + 64f) / 127f) * 4;
+            //Console.WriteLine(((contrastPercentage + 64f) / 127f) * 4);
+            for (int i = 0; i < imagesList.Length; i++)
+            {
+                Bitmap bitmap = new Bitmap(imagesList[i]);
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    for (int x = 0; x < bitmap.Width; x++)
+                    {
+                        bitmap.SetPixel(x, y, PixelFilters.contrastFilter(bitmap.GetPixel(x, y), contrastPercentage));
                     }
                 }
                 //save (write) sepia image
