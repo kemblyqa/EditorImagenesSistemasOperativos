@@ -163,28 +163,15 @@ namespace EditorImagenes_Proyecto1
             Parallel.For(0, Environment.ProcessorCount,
                    index =>
                    {
+                       Bitmap img;
                        Console.WriteLine("Proceso " + index + " iniciado.");
                        Tuple<int, int, int> pixel = FilterMonitor.getNext();
                        Color nextPixel;
                        while (pixel != null)
                        {
                            nextPixel = FilterMonitor.getPixel(pixel.Item1, pixel.Item2, pixel.Item3);
-                           Tuple<int, int> dim = FilterMonitor.getDimentions(pixel.Item3);
-                           int xLimit = pixel.Item1 + radious < dim.Item1 ? pixel.Item1 + radious : dim.Item1 - 1;
-                           int yLimit = pixel.Item2 + radious < dim.Item2 ? pixel.Item2 + radious : dim.Item2 - 1;
-                           int r = 0; int g = 0; int b = 0;
-                           Color aux;
-                           int c = 0;
-                           for (int w = (Math.Abs(pixel.Item1 - radious) + (pixel.Item1 - radious)) / 2; w < xLimit; w++)
-                               for (int h = (Math.Abs(pixel.Item2 - radious) + (pixel.Item2 - radious)) / 2; h < yLimit; h++)
-                               {
-                                   aux = FilterMonitor.getPixel(w, h,pixel.Item3);
-                                   r += aux.R;
-                                   g += aux.G;
-                                   b += aux.B;
-                                   c++;
-                               }
-                           Color newPixel = Color.FromArgb(r / c, g / c, b / c);
+                           img = FilterMonitor.imageList[pixel.Item3];
+                           Color newPixel = PixelFilters.Gauss(ref img, pixel.Item1, pixel.Item2, radious);
                            FilterMonitor.setPixel(
                                    pixel.Item3,
                                    newPixel,
