@@ -84,5 +84,52 @@ namespace EditorImagenes_Proyecto1
                 (int)((255 - pixel.B) * brightPercentage + pixel.B)
            );
         }
+
+        public static Color gammaFilter(Color pixel, float gammaPercentage)
+        {    
+            byte[] redGamma = createGammaArray(gammaPercentage);
+            byte[] greenGamma = createGammaArray(gammaPercentage);
+            byte[] blueGamma = createGammaArray(gammaPercentage);
+
+            return Color.FromArgb(
+                pixel.A,
+                redGamma[pixel.R],
+                greenGamma[pixel.G],
+                blueGamma[pixel.B]
+                );
+        }
+
+        public static byte[] createGammaArray(float color)
+        {
+            byte[] gammaArray = new byte[256];
+            for (int i = 0; i < 256; ++i)
+            {
+                gammaArray[i] = (byte) Math.Min(255, (int)((255.0 * Math.Pow(i / 255.0, 1.0 / color)) + 0.5));
+            }
+            return gammaArray;
+        }
+        
+
+        public static int adjustConstrast(float pixelItem, float contrastPercentage)
+        {
+            float pI = pixelItem / 255f;
+            pI -= 0.5f;
+            pI *= contrastPercentage;
+            pI += 0.5f;
+            pI *= 255;
+            if (pI < 0) pI = 0;
+            if (pI > 255) pI = 255;
+            return (int) pI;
+        }
+
+        public static Color contrastFilter(Color pixel, float gammaPercentage)
+        {
+            return Color.FromArgb(
+                pixel.A,
+                adjustConstrast(pixel.R, gammaPercentage),
+                adjustConstrast(pixel.G, gammaPercentage),
+                adjustConstrast(pixel.B, gammaPercentage)
+            );
+        }
     }
 }

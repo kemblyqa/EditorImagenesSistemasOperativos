@@ -70,7 +70,13 @@ namespace EditorImagenes_Proyecto1
                     break;
                 case 8:
                     SequentialImageFilter.texture(imagesList);
-                    break;                
+                    break;
+                case 9:
+                    SequentialImageFilter.gammaFilter(imagesList, slider.Value);
+                    break;
+                case 10:
+                    SequentialImageFilter.contrastFilter(imagesList, slider.Value);
+                    break;
                 default:
                     Console.WriteLine("Error detectado");
                     break;
@@ -85,7 +91,7 @@ namespace EditorImagenes_Proyecto1
 
         private void cmbFilters_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(cmbFilters.SelectedIndex == 6)
+            if(cmbFilters.SelectedIndex == 6 || cmbFilters.SelectedIndex == 9 || cmbFilters.SelectedIndex == 10)
             {
                 panelCompress.Visible = true;
             }
