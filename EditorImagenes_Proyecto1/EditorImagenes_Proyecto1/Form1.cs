@@ -114,6 +114,15 @@ namespace EditorImagenes_Proyecto1
                     else
                         SequentialImageFilter.contrastFilter(imagesList, slider.Value);
                     break;
+                case 11:
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        //ConcurrentImageFilter.chaosFilter(slider.Value);
+                    }
+                    else
+                        SequentialImageFilter.chaosFilter(imagesList, (slider.Value + 64) * 2);
+                    break;
                 default:
                     Console.WriteLine("Error detectado");
                     break;

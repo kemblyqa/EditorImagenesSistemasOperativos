@@ -29,7 +29,7 @@ namespace EditorImagenes_Proyecto1
             imageStr = new List<String>();
             imageCounter = new List<int>();
         }
-        //Adds new images to the buffer
+        //Añade una cola de imagenes al buffer de pixeles
         public static void addBuffer(String[] imgList)
         {
             foreach(String img in imgList)
@@ -41,7 +41,7 @@ namespace EditorImagenes_Proyecto1
                 imageCounter.Add(aux.Width * aux.Height);
             }
         }
-        //X,Y and image number
+        //Retorna el siguiente pixel a en cola de tratamiento, los valores son X, Y y el numero de imagen de la cola
         public static Tuple<int, int, int> getNext()
         {
             Monitor.Enter(imageList);
@@ -68,6 +68,7 @@ namespace EditorImagenes_Proyecto1
                 Monitor.Exit(imageList);
             }
         }
+        //Asigna un nuevo pixel en la lista de imagenes procesadas, recibe el numero de imagen, el pixel modificado y las coordenadas en forma de Tupla doble
         public static void setPixel(int imgTarget, Color pixel, Tuple<int, int> coord)
         {
             Monitor.Enter(imageOut);
@@ -86,11 +87,13 @@ namespace EditorImagenes_Proyecto1
                 Monitor.Exit(imageOut);
             }
         }
+        //Obtiene un pixel
         public static Color getPixel(int x, int y, int img)
         {
             lock (imageList)
                 return imageList[img].GetPixel(x, y);
         }
+        //Obtiene el ancho y alto de una imagen objetivo
         public static Tuple<int,int> getDimentions(int imgTarget)
         {
             lock (imageList)

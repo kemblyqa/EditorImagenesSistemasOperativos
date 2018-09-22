@@ -11,6 +11,9 @@ namespace EditorImagenes_Proyecto1
 {
     class ConcurrentImageFilter
     {
+        /// <summary>
+        /// grayscale filter
+        /// </summary>
         public static void grayScale()
         {
             Parallel.For(0, Environment.ProcessorCount,
@@ -34,7 +37,10 @@ namespace EditorImagenes_Proyecto1
                    });
         }
 
-        //brigth **
+        /// <summary>
+        /// brightness filter
+        /// </summary>
+        /// <param name="brightPercentage"> need the bright percentage </param>
         public static void brigthness(float brightPercentage)
         {
             Parallel.For(0, Environment.ProcessorCount,
@@ -84,6 +90,10 @@ namespace EditorImagenes_Proyecto1
                    });
         }
 
+        /// <summary>
+        /// gamma filter
+        /// </summary>
+        /// <param name="gammaPercentage"> gamma percentage </param>
         public static void gammaFilter(float gammaPercentage)
         {
             gammaPercentage = ((gammaPercentage + 64f) / 127f) * 5;
@@ -110,6 +120,10 @@ namespace EditorImagenes_Proyecto1
                    });
         }
 
+        /// <summary>
+        /// contrast filter
+        /// </summary>
+        /// <param name="contrastPercentage"> contrast percentage </param>
         public static void contrastFilter(float contrastPercentage)
         {
             contrastPercentage = ((contrastPercentage + 64f) / 127f) * 4;
