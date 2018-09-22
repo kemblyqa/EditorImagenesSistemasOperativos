@@ -115,13 +115,13 @@ namespace EditorImagenes_Proyecto1
 
         private void cmbFilters_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(cmbFilters.SelectedIndex == 6 || cmbFilters.SelectedIndex == 9 || cmbFilters.SelectedIndex == 10)
+            if(cmbFilters.SelectedIndex == 0 || cmbFilters.SelectedIndex == 1 || cmbFilters.SelectedIndex == 3)
             {
-                panelCompress.Visible = true;
+                panelCompress.Visible = false;
             }
             else
             {
-                panelCompress.Visible = false;
+                panelCompress.Visible = true;
             }
         }
     }    
