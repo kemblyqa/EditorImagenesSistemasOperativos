@@ -30,7 +30,13 @@ namespace EditorImagenes_Proyecto1
             switch (cmbFilters.SelectedIndex)
             {
                 case 0:
-                    SequentialImageFilter.grayScale(imagesList);
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.grayScale();
+                    }
+                    else
+                        SequentialImageFilter.grayScale(imagesList);
                     break;
                 case 1:
                     if (rdbSequential.Checked)
@@ -60,7 +66,13 @@ namespace EditorImagenes_Proyecto1
                         Console.WriteLine("Llamar funcion con threads");
                     break;
                 case 5:
-                    SequentialImageFilter.brigthness(imagesList, slider.Value);
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.brigthness(slider.Value);
+                    }
+                    else
+                        SequentialImageFilter.brigthness(imagesList, slider.Value);
                     break;
                 case 6:
                     // Compresión
@@ -72,10 +84,22 @@ namespace EditorImagenes_Proyecto1
                     SequentialImageFilter.texture(imagesList);
                     break;
                 case 9:
-                    SequentialImageFilter.gammaFilter(imagesList, slider.Value);
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.gammaFilter(slider.Value);
+                    }
+                    else
+                        SequentialImageFilter.gammaFilter(imagesList, slider.Value);
                     break;
                 case 10:
-                    SequentialImageFilter.contrastFilter(imagesList, slider.Value);
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.contrastFilter(slider.Value);
+                    }
+                    else
+                        SequentialImageFilter.contrastFilter(imagesList, slider.Value);
                     break;
                 default:
                     Console.WriteLine("Error detectado");

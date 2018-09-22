@@ -67,6 +67,13 @@ namespace EditorImagenes_Proyecto1
             return (pixel.R + pixel.G + pixel.B) / 3;
         }
 
+        public static Color grayScaleFilter(Color pixel)
+        {
+            //set new pixel value
+            int avg = averageColorFilter(pixel);
+            return Color.FromArgb(pixel.A, avg, avg, avg);
+        }
+
         //brightness
         public static Color brightnessFilter(Color pixel, float brightPercentage)
         {
