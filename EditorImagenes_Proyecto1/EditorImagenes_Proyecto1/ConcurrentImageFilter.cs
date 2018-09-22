@@ -163,20 +163,28 @@ namespace EditorImagenes_Proyecto1
             Parallel.For(0, Environment.ProcessorCount,
                    index =>
                    {
-                       Bitmap img;
+                       int currentImage = -1;
+                       Bitmap img = null;
                        Console.WriteLine("Proceso " + index + " iniciado.");
                        Tuple<int, int, int> pixel = FilterMonitor.getNext();
                        Color nextPixel;
                        while (pixel != null)
                        {
                            nextPixel = FilterMonitor.getPixel(pixel.Item1, pixel.Item2, pixel.Item3);
-                           img = FilterMonitor.imageList[pixel.Item3];
-                           Color newPixel = PixelFilters.Gauss(ref img, pixel.Item1, pixel.Item2, radious);
-                           FilterMonitor.setPixel(
-                                   pixel.Item3,
-                                   newPixel,
-                                   new Tuple<int, int>(pixel.Item1, pixel.Item2));
-                           pixel = FilterMonitor.getNext();
+                           if (currentImage != pixel.Item3 || img == null)
+                           {
+                               currentImage = pixel.Item3;
+                               img = FilterMonitor.imageList[pixel.Item3];
+                           }
+                           else
+                           {
+                               Color newPixel = PixelFilters.Gauss(ref img, pixel.Item1, pixel.Item2, radious);
+                               FilterMonitor.setPixel(
+                                       pixel.Item3,
+                                       newPixel,
+                                       new Tuple<int, int>(pixel.Item1, pixel.Item2));
+                               pixel = FilterMonitor.getNext();
+                           }
                        }
                        Console.WriteLine("Proceso " + index + " terminado.");
                    });
