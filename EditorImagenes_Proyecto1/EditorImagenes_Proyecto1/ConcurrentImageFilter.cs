@@ -10,8 +10,6 @@ namespace EditorImagenes_Proyecto1
 {
     class ConcurrentImageFilter
     {
-        static Object set = new object();
-        static Object get = new object();
         //public static Bitmap grayScale(string imagePath)
         //{
 
@@ -41,52 +39,19 @@ namespace EditorImagenes_Proyecto1
                    {
                        Console.WriteLine("Proceso " + index + " iniciado.");
                        Tuple<int, int, int> pixel;
-                       Monitor.Enter(get);
-                       try
-                       {
-                           pixel = FilterMonitor.getNext();
-                       }
-                       finally
-                       {
-                           Monitor.Exit(get);
-                       }
+                       pixel = FilterMonitor.getNext();
                        Color nextPixel;
                        while (pixel != null)
                        {
-                           Monitor.Enter(get);
-                           try
-                           {
-                               nextPixel = FilterMonitor.imageList[pixel.Item3].GetPixel(pixel.Item1, pixel.Item2);
-                           }
-                           finally
-                           {
-                               Monitor.Exit(get);
-                           }
+                           nextPixel = FilterMonitor.getPixel(pixel.Item1, pixel.Item2,pixel.Item3);
                            Color newPixel = PixelFilters.opacityFilter(
                                nextPixel,
                                opacity);
-                           Monitor.Enter(set);
-                           try
-                           {
-                               FilterMonitor.setPixel(
-                                       pixel.Item3,
-                                       newPixel,
-                                       new Tuple<int, int>(pixel.Item1, pixel.Item2));
-                           }
-                           finally
-                           {
-                               Monitor.Exit(set);
-                           }
-
-                           Monitor.Enter(get);
-                           try
-                           {
-                               pixel = FilterMonitor.getNext();
-                           }
-                           finally
-                           {
-                               Monitor.Exit(get);
-                           }
+                           FilterMonitor.setPixel(
+                                   pixel.Item3,
+                                   newPixel,
+                                   new Tuple<int, int>(pixel.Item1, pixel.Item2));
+                           pixel = FilterMonitor.getNext();
                        }
                        Console.WriteLine("Proceso " + index + " terminado.");
                    });
