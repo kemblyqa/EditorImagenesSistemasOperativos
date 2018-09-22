@@ -301,5 +301,22 @@ namespace EditorImagenes_Proyecto1
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
+        public static void chaosFilter(string[] imagesList, int chaosLvl)
+        {
+            Random r = new Random();
+            for (int i = 0; i < imagesList.Length; i++)
+            {
+                Bitmap bitmap = new Bitmap(imagesList[i]);
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    for (int x = 0; x < bitmap.Width; x++)
+                    {
+                        bitmap.SetPixel(x, y, PixelFilters.sumFilter(bitmap.GetPixel(x, y), r.Next(0, chaosLvl), r.Next(0, chaosLvl), r.Next(0, chaosLvl), r.Next(0, chaosLvl)));
+                    }
+                }
+                //save (write) sepia image
+                bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
+            }
+        }
     }
 }
