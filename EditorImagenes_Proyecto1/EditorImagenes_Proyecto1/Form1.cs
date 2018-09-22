@@ -25,6 +25,7 @@ namespace EditorImagenes_Proyecto1
         private void btnGenerateImg_Click(object sender, EventArgs e)
         {
             // images files
+            btnGenerateImg.Enabled = false;
             string[] imagesList = Directory.GetFiles(@"InputImages\\");
             FilterMonitor.refresh();
             switch (cmbFilters.SelectedIndex)
@@ -55,9 +56,9 @@ namespace EditorImagenes_Proyecto1
                     break;
                 case 4:
                     if (rdbSequential.Checked)
-                        Console.WriteLine("Llamar funcion secuencial");
+                        SequentialImageFilter.gaussianFilter(imagesList, 5);
                     else
-                        Console.WriteLine("Llamar funcion con threads");
+                        SequentialImageFilter.gaussianFilter(imagesList, 5);
                     break;
                 case 5:
                     SequentialImageFilter.brigthness(imagesList, slider.Value);
@@ -75,6 +76,7 @@ namespace EditorImagenes_Proyecto1
                     Console.WriteLine("Error detectado");
                     break;
             }
+            btnGenerateImg.Enabled = true;
         }
 
         private void slider_ValueChanged(object sender, EventArgs e)

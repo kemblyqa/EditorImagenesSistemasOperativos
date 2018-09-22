@@ -60,7 +60,25 @@ namespace EditorImagenes_Proyecto1
                 pixel.B % factor <= factor / 2 ? pixel.B - pixel.B % factor : pixel.B + factor - (pixel.B % factor)
                 );
         }
-
+        //Gauss
+        public static Color Gauss(ref Bitmap img, int x, int y, int radious)
+        {
+            int xLimit = x + radious < img.Width ? x + radious : img.Width - 1;
+            int yLimit = y + radious < img.Height ? y + radious : img.Height - 1;
+            int r = 0;int g = 0;int b = 0;
+            Color aux;
+            int c = 0;
+            for (int w = (Math.Abs(x - radious) + (x - radious)) / 2; w < xLimit; w++)
+                for(int h = (Math.Abs(y-radious) + (y-radious))/2; h < yLimit; h++)
+                {
+                    aux = img.GetPixel(w, h);
+                    r += aux.R;
+                    g += aux.G;
+                    b += aux.B;
+                    c++;
+                }
+            return Color.FromArgb(r/c, g/c, b/c);
+        }
         //average
         public static int averageColorFilter(Color pixel)
         {

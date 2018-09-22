@@ -78,7 +78,7 @@ namespace EditorImagenes_Proyecto1
                 if (imageCounter[imgTarget] == 0)
                 {
                     imageOut[imgTarget].Save(@"OutputImages\\" + Path.GetFileName(imageStr[imgTarget]));
-                    Console.WriteLine("Guardando " + imgTarget);
+                    Console.WriteLine("Guardado " + imgTarget);
                 }
             }
             finally
@@ -90,6 +90,11 @@ namespace EditorImagenes_Proyecto1
         {
             lock (imageList)
                 return imageList[img].GetPixel(x, y);
+        }
+        public static Tuple<int,int> getDimentions(int imgTarget)
+        {
+            lock (imageList)
+                return new Tuple<int, int>(imageList[imgTarget].Width, imageList[imgTarget].Height);
         }
     }
 }

@@ -224,7 +224,6 @@ namespace EditorImagenes_Proyecto1
             {
                 Bitmap img = new Bitmap(imagesList[i]);
                 Bitmap product = new Bitmap(img.Width, img.Height);
-                Console.WriteLine(product.Width + "," + product.Height);
                 for (int x = 0; x < img.Width; x++)
                     for (int y = 0; y < img.Height; y++)
                     {
@@ -240,7 +239,6 @@ namespace EditorImagenes_Proyecto1
         {
             for (int i = 0; i < imagesList.Length; i++)
             {
-                Console.WriteLine(imagesList[i]);
                 Bitmap img = new Bitmap(imagesList[i]);
                 Bitmap product = new Bitmap(img.Width, img.Height);
                 for (int x = 0; x < img.Width; x++)
@@ -249,6 +247,22 @@ namespace EditorImagenes_Proyecto1
                         product.SetPixel(x, y, PixelFilters.segmentationFilter(img.GetPixel(x, y), segmentSize));
                     }
                 //save (write) segmented image
+                product.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
+            }
+        }
+
+        public static void gaussianFilter(string[] imagesList, int radious)
+        {
+            for (int i = 0; i < imagesList.Length; i++)
+            {
+                Bitmap img = new Bitmap(imagesList[i]);
+                Bitmap product = new Bitmap(img.Width, img.Height);
+                for (int x = 0; x < img.Width; x++)
+                    for (int y = 0; y < img.Height; y++)
+                    {
+                        product.SetPixel(x, y, PixelFilters.Gauss(ref img, x, y, radious));
+                    }
+                //save (write) gaussian image
                 product.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
