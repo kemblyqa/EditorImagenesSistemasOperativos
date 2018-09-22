@@ -31,7 +31,13 @@ namespace EditorImagenes_Proyecto1
             switch (cmbFilters.SelectedIndex)
             {
                 case 0:
-                    SequentialImageFilter.grayScale(imagesList);
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.grayScale();
+                    }
+                    else
+                        SequentialImageFilter.grayScale(imagesList);
                     break;
                 case 1:
                     if (rdbSequential.Checked)
@@ -61,7 +67,13 @@ namespace EditorImagenes_Proyecto1
                         SequentialImageFilter.gaussianFilter(imagesList, 5);
                     break;
                 case 5:
-                    SequentialImageFilter.brigthness(imagesList, slider.Value);
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.brigthness(slider.Value);
+                    }
+                    else
+                        SequentialImageFilter.brigthness(imagesList, slider.Value);
                     break;
                 case 6:
                     // Compresión
@@ -71,7 +83,25 @@ namespace EditorImagenes_Proyecto1
                     break;
                 case 8:
                     SequentialImageFilter.texture(imagesList);
-                    break;                
+                    break;
+                case 9:
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.gammaFilter(slider.Value);
+                    }
+                    else
+                        SequentialImageFilter.gammaFilter(imagesList, slider.Value);
+                    break;
+                case 10:
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.contrastFilter(slider.Value);
+                    }
+                    else
+                        SequentialImageFilter.contrastFilter(imagesList, slider.Value);
+                    break;
                 default:
                     Console.WriteLine("Error detectado");
                     break;
@@ -87,13 +117,13 @@ namespace EditorImagenes_Proyecto1
 
         private void cmbFilters_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(cmbFilters.SelectedIndex == 6)
+            if(cmbFilters.SelectedIndex == 0 || cmbFilters.SelectedIndex == 1 || cmbFilters.SelectedIndex == 3)
             {
-                panelCompress.Visible = true;
+                panelCompress.Visible = false;
             }
             else
             {
-                panelCompress.Visible = false;
+                panelCompress.Visible = true;
             }
         }
     }    

@@ -10,32 +10,55 @@ namespace EditorImagenes_Proyecto1
 {
     class ConcurrentImageFilter
     {
-        //public static Bitmap grayScale(string imagePath)
-        //{
-
-        //    //write the grayscale image
-        //    bitmap.Save("D:\\Image\\Grayscale.png");
-        //    return bitmap;
-        //}
+        public static void grayScale()
+        {
+            Parallel.For(0, Environment.ProcessorCount,
+                   index =>
+                   {
+                       Console.WriteLine("Proceso " + index + " iniciado.");
+                       Tuple<int, int, int> pixel;
+                       pixel = FilterMonitor.getNext();
+                       Color nextPixel;
+                       while (pixel != null)
+                       {
+                           nextPixel = FilterMonitor.getPixel(pixel.Item1, pixel.Item2, pixel.Item3);
+                           Color newPixel = PixelFilters.grayScaleFilter(nextPixel);
+                           FilterMonitor.setPixel(
+                                   pixel.Item3,
+                                   newPixel,
+                                   new Tuple<int, int>(pixel.Item1, pixel.Item2));
+                           pixel = FilterMonitor.getNext();
+                       }
+                       Console.WriteLine("Proceso " + index + " terminado.");
+                   });
+        }
 
         //brigth **
-        public static Bitmap brigthness(string imagePath)
+        public static void brigthness(float brightPercentage)
         {
-            //read image
-            Bitmap bitmap = new Bitmap(imagePath);
-            return bitmap;
+            Parallel.For(0, Environment.ProcessorCount,
+                   index =>
+                   {
+                       Console.WriteLine("Proceso " + index + " iniciado.");
+                       Tuple<int, int, int> pixel;
+                       pixel = FilterMonitor.getNext();
+                       Color nextPixel;
+                       while (pixel != null)
+                       {
+                           nextPixel = FilterMonitor.getPixel(pixel.Item1, pixel.Item2, pixel.Item3);
+                           Color newPixel = PixelFilters.brightnessFilter(
+                               nextPixel, 
+                               brightPercentage);
+                           FilterMonitor.setPixel(
+                                   pixel.Item3,
+                                   newPixel,
+                                   new Tuple<int, int>(pixel.Item1, pixel.Item2));
+                           pixel = FilterMonitor.getNext();
+                       }
+                       Console.WriteLine("Proceso " + index + " terminado.");
+                   });
         }
-        //texture **
-        public static Bitmap texture(string imagePath)
-        {
-            //read image
-            Bitmap bitmap = new Bitmap(imagePath);
-            return bitmap;
-        }
-        void thread(Color newPixel, Delegate funcion, params object[] parametros)
-        {
-            funcion.DynamicInvoke(parametros);
-        }
+
         public static void opacity(float opacity)
         {
             Parallel.For(0, Environment.ProcessorCount,
@@ -50,6 +73,58 @@ namespace EditorImagenes_Proyecto1
                            Color newPixel = PixelFilters.opacityFilter(
                                nextPixel,
                                opacity);
+                           FilterMonitor.setPixel(
+                                   pixel.Item3,
+                                   newPixel,
+                                   new Tuple<int, int>(pixel.Item1, pixel.Item2));
+                           pixel = FilterMonitor.getNext();
+                       }
+                       Console.WriteLine("Proceso " + index + " terminado.");
+                   });
+        }
+
+        public static void gammaFilter(float gammaPercentage)
+        {
+            gammaPercentage = ((gammaPercentage + 64f) / 127f) * 5;
+            Parallel.For(0, Environment.ProcessorCount,
+                   index =>
+                   {
+                       Console.WriteLine("Proceso " + index + " iniciado.");
+                       Tuple<int, int, int> pixel;
+                       pixel = FilterMonitor.getNext();
+                       Color nextPixel;
+                       while (pixel != null)
+                       {
+                           nextPixel = FilterMonitor.getPixel(pixel.Item1, pixel.Item2, pixel.Item3);
+                           Color newPixel = PixelFilters.gammaFilter(
+                               nextPixel,
+                               gammaPercentage);
+                           FilterMonitor.setPixel(
+                                   pixel.Item3,
+                                   newPixel,
+                                   new Tuple<int, int>(pixel.Item1, pixel.Item2));
+                           pixel = FilterMonitor.getNext();
+                       }
+                       Console.WriteLine("Proceso " + index + " terminado.");
+                   });
+        }
+
+        public static void contrastFilter(float contrastPercentage)
+        {
+            contrastPercentage = ((contrastPercentage + 64f) / 127f) * 4;
+            Parallel.For(0, Environment.ProcessorCount,
+                   index =>
+                   {
+                       Console.WriteLine("Proceso " + index + " iniciado.");
+                       Tuple<int, int, int> pixel;
+                       pixel = FilterMonitor.getNext();
+                       Color nextPixel;
+                       while (pixel != null)
+                       {
+                           nextPixel = FilterMonitor.getPixel(pixel.Item1, pixel.Item2, pixel.Item3);
+                           Color newPixel = PixelFilters.contrastFilter(
+                               nextPixel,
+                               contrastPercentage);
                            FilterMonitor.setPixel(
                                    pixel.Item3,
                                    newPixel,
