@@ -101,7 +101,9 @@ namespace EditorImagenes_Proyecto1
             }
         }
 
-        //grayscale
+        /// <summary>
+        /// grayscale filter
+        /// </summary>
         public static void grayScale(string[] imagesList)
         {
             for (int i = 0; i < imagesList.Length; i++)
@@ -119,7 +121,10 @@ namespace EditorImagenes_Proyecto1
             }
         }
 
-        //brigth **
+        /// <summary>
+        /// brightness filter
+        /// </summary>
+        /// <param name="brightPercentage"> need the bright percentage </param>
         public static void brigthness(string[] imagesList, float brightPercentage)
         {
             for (int i = 0; i < imagesList.Length; i++)
@@ -264,6 +269,11 @@ namespace EditorImagenes_Proyecto1
                 product.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
+
+        /// <summary>
+        /// gamma filter
+        /// </summary>
+        /// <param name="gammaPercentage"> gamma percentage </param>
         public static void gammaFilter(string[] imagesList, float gammaPercentage)
         {
             gammaPercentage = ((gammaPercentage + 64f) / 127f) * 5;
@@ -283,6 +293,10 @@ namespace EditorImagenes_Proyecto1
             }
         }
 
+        /// <summary>
+        /// contrast filter
+        /// </summary>
+        /// <param name="contrastPercentage"> contrast percentage </param>
         public static void contrastFilter(string[] imagesList, float contrastPercentage)
         {
             contrastPercentage = ((contrastPercentage + 64f) / 127f) * 4;
