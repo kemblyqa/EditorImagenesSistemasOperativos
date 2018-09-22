@@ -52,12 +52,13 @@ namespace EditorImagenes_Proyecto1
         //Applies an opacity Filter over a pixel
         public static Color segmentationFilter(Color pixel, int segmentation)
         {
-            int factor = 255 / segmentation;
+            int factor = segmentation == 1 ? 1 : segmentation-1;
+
             return Color.FromArgb(
                 pixel.A,
-                pixel.R % factor <= factor / 2 ? pixel.R - pixel.R % factor : pixel.R + factor - (pixel.R % factor),
-                pixel.G % factor <= factor / 2 ? pixel.G - pixel.G % factor : pixel.G + factor - (pixel.G % factor),
-                pixel.B % factor <= factor / 2 ? pixel.B - pixel.B % factor : pixel.B + factor - (pixel.B % factor)
+                pixel.R % factor <= factor / 2 ? pixel.R - pixel.R % factor : Math.Min(pixel.R + factor - (pixel.R % factor), 255),
+                pixel.G % factor <= factor / 2 ? pixel.G - pixel.G % factor : Math.Min(pixel.G + factor - (pixel.G % factor), 255),
+                pixel.B % factor <= factor / 2 ? pixel.B - pixel.B % factor : Math.Min(pixel.B + factor - (pixel.B % factor), 255)
                 );
         }
         //Gauss

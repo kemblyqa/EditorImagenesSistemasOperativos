@@ -28,6 +28,7 @@ namespace EditorImagenes_Proyecto1
             btnGenerateImg.Enabled = false;
             string[] imagesList = Directory.GetFiles(@"InputImages\\");
             FilterMonitor.refresh();
+            float percent = 0;
             switch (cmbFilters.SelectedIndex)
             {
                 case 0:
@@ -46,13 +47,14 @@ namespace EditorImagenes_Proyecto1
                         Console.WriteLine("Llamar funcion con threads");
                     break;
                 case 2:
+                    percent = (slider.Value + 64) / 128f;
                     if (rdbParallelism.Checked)
                     {
                         FilterMonitor.addBuffer(imagesList);
-                        ConcurrentImageFilter.opacity((float)(5) / (float)20);
+                        ConcurrentImageFilter.opacity(percent);
                     }
                     else
-                        SequentialImageFilter.opacityFilter(imagesList, (float)(5) / (float)20);
+                        SequentialImageFilter.opacityFilter(imagesList, percent);
                     break;
                 case 3:
                     if (rdbSequential.Checked)
@@ -61,10 +63,11 @@ namespace EditorImagenes_Proyecto1
                         Console.WriteLine("Llamar funcion con threads");
                     break;
                 case 4:
+                    percent = (slider.Value + 64) / 128f;
                     if (rdbSequential.Checked)
-                        SequentialImageFilter.gaussianFilter(imagesList, 5);
+                        SequentialImageFilter.gaussianFilter(imagesList, (int)percent * 5);
                     else
-                        SequentialImageFilter.gaussianFilter(imagesList, 5);
+                        SequentialImageFilter.gaussianFilter(imagesList, (int)percent * 5);
                     break;
                 case 5:
                     if (rdbParallelism.Checked)
@@ -79,7 +82,14 @@ namespace EditorImagenes_Proyecto1
                     // Compresión
                     break;
                 case 7:
-                    SequentialImageFilter.segmentationFilter(imagesList, 21-(slider.Value + 10));
+                    int segments = (int)(((slider.Value+64)*7)/128f);
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.segmentation((int)Math.Pow(2, segments));
+                    }
+                    else
+                        SequentialImageFilter.segmentationFilter(imagesList, (int)Math.Pow(2, segments));
                     break;
                 case 8:
                     SequentialImageFilter.texture(imagesList);
