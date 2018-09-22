@@ -135,6 +135,7 @@ namespace EditorImagenes_Proyecto1
                        Console.WriteLine("Proceso " + index + " terminado.");
                    });
         }
+
         public static void segmentation(int segments)
         {
             Parallel.For(0, Environment.ProcessorCount,
@@ -158,6 +159,7 @@ namespace EditorImagenes_Proyecto1
                        Console.WriteLine("Proceso " + index + " terminado.");
                    });
         }
+
         public static void gauss(int radious)
         {
             Parallel.For(0, Environment.ProcessorCount,
@@ -263,6 +265,5 @@ namespace EditorImagenes_Proyecto1
                 bmp.Save(@"OutputImages\\" + Path.GetFileName(imagen));
             });
         }
-
     }
 }
