@@ -80,12 +80,22 @@ namespace EditorImagenes_Proyecto1
                 }
             return Color.FromArgb(r/c, g/c, b/c);
         }
-        //average
+
+        /// <summary>
+        /// average color from pixel
+        /// </summary>
+        /// <param name="pixel">pixel color</param>
+        /// <returns>pixel modified</returns>
         public static int averageColorFilter(Color pixel)
         {
             return (pixel.R + pixel.G + pixel.B) / 3;
         }
 
+        /// <summary>
+        /// set graysacale color to pixel
+        /// </summary>
+        /// <param name="pixel">pixel to modify</param>
+        /// <returns>pixel modified</returns>
         public static Color grayScaleFilter(Color pixel)
         {
             //set new pixel value
@@ -93,7 +103,12 @@ namespace EditorImagenes_Proyecto1
             return Color.FromArgb(pixel.A, avg, avg, avg);
         }
 
-        //brightness
+        /// <summary>
+        /// set brightness to pixel
+        /// </summary>
+        /// <param name="pixel">pixel to modify</param>
+        /// <param name="brightPercentage">brightness percentage</param>
+        /// <returns>pixel modified</returns>
         public static Color brightnessFilter(Color pixel, float brightPercentage)
         {
             return brightPercentage < 0 ?
@@ -111,6 +126,12 @@ namespace EditorImagenes_Proyecto1
            );
         }
 
+        /// <summary>
+        /// set gamma color to pixel
+        /// </summary>
+        /// <param name="pixel">pixel to modify</param>
+        /// <param name="gammaPercentage">gamma percentage</param>
+        /// <returns>pixel modified</returns>
         public static Color gammaFilter(Color pixel, float gammaPercentage)
         {    
             byte[] redGamma = createGammaArray(gammaPercentage);
@@ -125,6 +146,11 @@ namespace EditorImagenes_Proyecto1
                 );
         }
 
+        /// <summary>
+        /// set array of bytes where applies the gamma balance
+        /// </summary>
+        /// <param name="color">pixel color to modify</param>
+        /// <returns>pixel modified</returns>
         public static byte[] createGammaArray(float color)
         {
             byte[] gammaArray = new byte[256];
@@ -134,8 +160,13 @@ namespace EditorImagenes_Proyecto1
             }
             return gammaArray;
         }
-        
 
+        /// <summary>
+        /// set contrast adjustment to a pixel
+        /// </summary>
+        /// <param name="pixelItem">pixel color to modify</param>
+        /// <param name="contrastPercentage">contrast percentage</param>
+        /// <returns>pixel modified</returns>
         public static int adjustConstrast(float pixelItem, float contrastPercentage)
         {
             float pI = pixelItem / 255f;
@@ -148,14 +179,68 @@ namespace EditorImagenes_Proyecto1
             return (int) pI;
         }
 
-        public static Color contrastFilter(Color pixel, float gammaPercentage)
+        /// <summary>
+        /// set contrast balance to a pixel
+        /// </summary>
+        /// <param name="pixel">pixel to modify</param>
+        /// <param name="contrastPercentage">contrast percentage</param>
+        /// <returns>pixel modified</returns>
+        public static Color contrastFilter(Color pixel, float contrastPercentage)
         {
             return Color.FromArgb(
                 pixel.A,
-                adjustConstrast(pixel.R, gammaPercentage),
-                adjustConstrast(pixel.G, gammaPercentage),
-                adjustConstrast(pixel.B, gammaPercentage)
+                adjustConstrast(pixel.R, contrastPercentage),
+                adjustConstrast(pixel.G, contrastPercentage),
+                adjustConstrast(pixel.B, contrastPercentage)
             );
+        }
+
+        public static Color investColorFilter(Color pixel)
+        {
+            return Color.FromArgb(255 - pixel.R, 255 - pixel.G, 255 - pixel.B);
+        }
+
+        public static Color sepiaFilter(Color p)
+        {
+            //extract pixel component ARGB
+            int a = p.A;
+            int r = p.R;
+            int g = p.G;
+            int b = p.B;
+
+            //calculate temp value
+            int tr = (int)(0.393 * r + 0.769 * g + 0.189 * b);
+            int tg = (int)(0.349 * r + 0.686 * g + 0.168 * b);
+            int tb = (int)(0.272 * r + 0.534 * g + 0.131 * b);
+
+            //set new RGB value
+            if (tr > 255)
+            {
+                r = 255;
+            }
+            else
+            {
+                r = tr;
+            }
+
+            if (tg > 255)
+            {
+                g = 255;
+            }
+            else
+            {
+                g = tg;
+            }
+
+            if (tb > 255)
+            {
+                b = 255;
+            }
+            else
+            {
+                b = tb;
+            }
+            return Color.FromArgb(a, r, g, b);
         }
     }
 }

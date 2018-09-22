@@ -79,6 +79,8 @@ namespace EditorImagenes_Proyecto1
                         SequentialImageFilter.brigthness(imagesList, slider.Value);
                     break;
                 case 6:
+                    int compressionLevel = (int)(((slider.Value + 64) * 95) / 128f);
+                    SequentialImageFilter.VaryQualityLevel(imagesList, compressionLevel);
                     // Compresión
                     break;
                 case 7:
