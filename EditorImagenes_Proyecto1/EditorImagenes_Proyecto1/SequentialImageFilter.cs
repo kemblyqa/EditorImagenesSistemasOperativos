@@ -33,31 +33,17 @@ namespace EditorImagenes_Proyecto1
             throw new NotImplementedException();
         }*/
 
-        public static ImageCodecInfo GetEncoder(ImageFormat format)
-        {
-            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
-            foreach (ImageCodecInfo codec in codecs)
-            {
-                if (codec.FormatID == format.Guid)
-                {
-                    return codec;
-                }
-            }
-            return null;
-        }
-
-        public static void VaryQualityLevel(string[]  imagesList, float compressionPorcentage)
+        public static void compressionFilter(string[]  imagesList, float compressionPorcentage)
         {
             string num = compressionPorcentage.ToString();
             long numero = Convert.ToInt64(num);
-            Console.WriteLine(numero);
             for (int i = 0; i < imagesList.Length; i++)
             {
                 // Get a bitmap. The using statement ensures objects  
                 // are automatically disposed from memory after use.  
                 using (Bitmap bmp1 = new Bitmap(imagesList[i]))
                 {
-                    ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);//jpeg
+                    ImageCodecInfo jpgEncoder = PixelFilters.GetEncoder(ImageFormat.Jpeg);//jpeg
 
                     // Create an Encoder object based on the GUID  
                     // for the Quality parameter category.  
