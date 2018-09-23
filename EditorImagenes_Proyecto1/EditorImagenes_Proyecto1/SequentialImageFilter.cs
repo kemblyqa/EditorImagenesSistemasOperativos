@@ -11,7 +11,7 @@ namespace EditorImagenes_Proyecto1
 {
     class SequentialImageFilter
     {
-        public static void compressionFilter(string[]  imagesList, float compressionPorcentage)
+        public static void compressionFilter(string[] imagesList, float compressionPorcentage)
         {
             string num = compressionPorcentage.ToString();
             long numero = Convert.ToInt64(num);
@@ -32,15 +32,15 @@ namespace EditorImagenes_Proyecto1
                     // objects. In this case, there is only one  
                     // EncoderParameter object in the array.  
                     EncoderParameters myEncoderParameters = new EncoderParameters(1);
-                    
+
                     EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, numero);
                     myEncoderParameters.Param[0] = myEncoderParameter;
                     bmp.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]), jpgEncoder, myEncoderParameters);
                 }
             }
         }
-        
-        
+
+
         /// <summary>
         /// Function where we will apply the invert color filter to the loaded image
         /// </summary>
@@ -50,7 +50,7 @@ namespace EditorImagenes_Proyecto1
             {
                 //read image
                 Bitmap bmap = new Bitmap(imagesList[imagen]);
-                
+
                 for (int i = 0; i < bmap.Width; i++)
                 {
                     for (int j = 0; j < bmap.Height; j++)
@@ -102,11 +102,11 @@ namespace EditorImagenes_Proyecto1
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
-        
+
         //texture **
         public static void texture(string[] imagesList)
         {
-            
+
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace EditorImagenes_Proyecto1
                 Bitmap bmp = new Bitmap(imagesList[i]);
                 //get image dimension
                 int width = bmp.Width;
-                int height = bmp.Height;                
+                int height = bmp.Height;
 
                 //sepia
                 for (int x = 0; x < width; x++)
@@ -185,7 +185,7 @@ namespace EditorImagenes_Proyecto1
                 product.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
-        
+
         /// <summary>
         /// gamma filter
         /// </summary>
@@ -249,7 +249,7 @@ namespace EditorImagenes_Proyecto1
             }
         }
 
-        public static void distortionFilter(string [] imagesList, int level)
+        public static void distortionFilter(string[] imagesList, int level)
         {
             Random rndm = new Random();
             int numRandom;
@@ -263,7 +263,7 @@ namespace EditorImagenes_Proyecto1
                     for (int y = 0; y < bitmap.Height; y++)
                     {
                         numRandom = rndm.Next(level + 1);
-                        if(y < bitmap.Height - level & x < bitmap.Width - level)
+                        if (y < bitmap.Height - level & x < bitmap.Width - level)
                         {
                             rojo = bitmap.GetPixel(x + numRandom, y + numRandom).R;
                             verde = bitmap.GetPixel(x + numRandom, y + numRandom).G;
@@ -280,6 +280,26 @@ namespace EditorImagenes_Proyecto1
                         bitmap.SetPixel(x, y, Color.FromArgb(alpha, rojo, verde, azul));
                     }
                 }
+            }
+        }
+        ///
+        public static void wrinkledTexture(string[] imagesList)
+        {
+            for (int i = 0; i < imagesList.Length; i++)
+            {
+                Bitmap bitmap = new Bitmap(imagesList[i]);
+                Bitmap textureBitmap = new Bitmap(@"texture.jpg");
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    for (int x = 0; x < bitmap.Width; x++)
+                    {
+                        bitmap.SetPixel(x, y, PixelFilters.wrinkledTextureFilter(
+                            bitmap.GetPixel(x, y),
+                            textureBitmap.GetPixel(x % textureBitmap.Width, y % textureBitmap.Height)
+                            ));
+                    }
+                }
+                //save (write) sepia image
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }

@@ -67,6 +67,7 @@
             "Gamma",
             "Contraste",
             "Chaos",
+            "SomeTexture",
             "Distorción"});
             this.cmbFilters.Location = new System.Drawing.Point(131, 53);
             this.cmbFilters.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -152,6 +153,7 @@
             this.slider.SmallChange = 10;
             this.slider.TabIndex = 15;
             this.slider.TickFrequency = 0;
+            this.slider.Scroll += new System.EventHandler(this.slider_Scroll);
             // 
             // lblMax
             // 

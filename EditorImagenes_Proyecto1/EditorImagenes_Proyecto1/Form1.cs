@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,14 +18,15 @@ namespace EditorImagenes_Proyecto1
     public partial class Form1 : Form
     {
         static BackgroundWorker worker;
-        static string data;
+        static int data, selectedFilter, selectedValue;
         static Socket handler;
         public Form1()
         {
             worker = new BackgroundWorker();
             worker.DoWork += new DoWorkEventHandler(StartListening);
             worker.WorkerSupportsCancellation = true;
-            data = null;
+            selectedFilter = 0;
+            selectedValue = -64;
             InitializeComponent();
             cmbFilters.SelectedIndex = 0;
             panelCompress.Visible = false;
@@ -143,6 +145,15 @@ namespace EditorImagenes_Proyecto1
                         SequentialImageFilter.chaosFilter(imagesList, (slider.Value + 64) * 2);
                     break;
                 case 12:
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.wrinkledTexture();
+                    }
+                    else
+                        SequentialImageFilter.wrinkledTexture(imagesList);
+                    break;
+                case 13:
                     int level = (int)(((slider.Value + 64) * 19) / 128f);
                     if (rdbSequential.Checked)
                         SequentialImageFilter.distortionFilter(imagesList, level);
@@ -156,7 +167,10 @@ namespace EditorImagenes_Proyecto1
 
         private void cmbFilters_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(cmbFilters.SelectedIndex == 0 || cmbFilters.SelectedIndex == 1 || cmbFilters.SelectedIndex == 3)
+            if(cmbFilters.SelectedIndex == 0 
+                || cmbFilters.SelectedIndex == 1 
+                || cmbFilters.SelectedIndex == 3 
+                || cmbFilters.SelectedIndex == 12)
             {
                 panelCompress.Visible = false;
             }
@@ -165,7 +179,7 @@ namespace EditorImagenes_Proyecto1
                 panelCompress.Visible = true;
             }
 
-            if(cmbFilters.SelectedIndex == 6 | cmbFilters.SelectedIndex == 12)
+            if(cmbFilters.SelectedIndex == 6 | cmbFilters.SelectedIndex == 13)
             {
                 lblMin.Text = "Maximo";
                 lblMax.Text = "Minimo";
@@ -176,7 +190,7 @@ namespace EditorImagenes_Proyecto1
                 lblMin.Text = "Minimo";
             }
         }
-        public static void StartListening(object sender, DoWorkEventArgs e)
+        public void StartListening(object sender, DoWorkEventArgs e)
         {
             // Data buffer for incoming data.  
             byte[] bytes = new Byte[1024];
@@ -211,29 +225,25 @@ namespace EditorImagenes_Proyecto1
                 // Start listening for connections.
                 while (!worker.CancellationPending)
                 {
-                    Console.WriteLine("Waiting for a connection...");
-                    // Program is suspended while waiting for an incoming connection.  
                     handler = listener.Accept();
-                    data = null;
-
-                    // An incoming connection needs to be processed.  
-                    while (true)
+                    int bytesRec = handler.Receive(bytes);
+                    data = BitConverter.ToInt32(bytes, 0);
+                    if (data.Equals(0))
                     {
-                        int bytesRec = handler.Receive(bytes);
-                        data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
-                        if (data.IndexOf("<EOF>") > -1)
-                        {
-                            break;
-                        }
+                        Tuple<int, int> aux = new Tuple<int, int>(selectedFilter, selectedValue);
+                        var binFormatter = new BinaryFormatter();
+                        var mStream = new MemoryStream();
+                        binFormatter.Serialize(mStream, aux);
+                        handler.Send(mStream.ToArray());
                     }
-
-                    // Show the data on the console.  
-                    Console.WriteLine("Text received : {0}", data);
-
-                    // Echo the data back to the client.  
-                    byte[] msg = Encoding.ASCII.GetBytes("Recibido<EOF>");
-
-                    handler.Send(msg);
+                    else
+                    {
+                        Tuple<int, List<Color>> aux = new Tuple<int, List<Color>>(data, null);
+                        var binFormatter = new BinaryFormatter();
+                        var mStream = new MemoryStream();
+                        binFormatter.Serialize(mStream, aux);
+                        handler.Send(mStream.ToArray());
+                    }
                 }
                 handler.Shutdown(SocketShutdown.Both);
                 handler.Close();
@@ -242,10 +252,6 @@ namespace EditorImagenes_Proyecto1
             {
                 Console.WriteLine(exc.ToString());
             }
-
-            Console.WriteLine("\nPress ENTER to continue...");
-            Console.Read();
-
         }
 
         private void ServeButton_Click(object sender, EventArgs e)
@@ -260,6 +266,11 @@ namespace EditorImagenes_Proyecto1
                 worker.CancelAsync();
                 ServeButton.Text = "Serve";
             }
+        }
+
+        private void slider_Scroll(object sender, EventArgs e)
+        {
+            selectedValue = slider.Value;
         }
     }    
 }

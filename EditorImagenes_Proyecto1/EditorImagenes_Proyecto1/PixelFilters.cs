@@ -283,6 +283,14 @@ namespace EditorImagenes_Proyecto1
             }
             return formatoFinal;
         }
-        
+
+        public static Color wrinkledTextureFilter(Color pixel, Color texturePixel)
+        {
+            return Color.FromArgb(
+                (int)( pixel.R * (texturePixel.R / 255f)),
+                (int)(pixel.G * (texturePixel.G / 255f)),
+                (int)(pixel.B * (texturePixel.B / 255f))
+            );
+        }
     }
 }
