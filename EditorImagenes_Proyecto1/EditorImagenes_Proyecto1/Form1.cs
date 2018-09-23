@@ -142,6 +142,15 @@ namespace EditorImagenes_Proyecto1
                     else
                         SequentialImageFilter.chaosFilter(imagesList, (slider.Value + 64) * 2);
                     break;
+                case 12:
+                    if (rdbParallelism.Checked)
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.wrinkledTexture();
+                    }
+                    else
+                        SequentialImageFilter.wrinkledTexture(imagesList);
+                    break;
                 default:
                     Console.WriteLine("Error detectado");
                     break;
@@ -151,7 +160,10 @@ namespace EditorImagenes_Proyecto1
 
         private void cmbFilters_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(cmbFilters.SelectedIndex == 0 || cmbFilters.SelectedIndex == 1 || cmbFilters.SelectedIndex == 3)
+            if(cmbFilters.SelectedIndex == 0 
+                || cmbFilters.SelectedIndex == 1 
+                || cmbFilters.SelectedIndex == 3 
+                || cmbFilters.SelectedIndex == 12)
             {
                 panelCompress.Visible = false;
             }

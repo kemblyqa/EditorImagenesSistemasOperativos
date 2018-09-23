@@ -248,5 +248,26 @@ namespace EditorImagenes_Proyecto1
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
+        ///
+        public static void wrinkledTexture(string[] imagesList)
+        {
+            for (int i = 0; i < imagesList.Length; i++)
+            {
+                Bitmap bitmap = new Bitmap(imagesList[i]);
+                Bitmap textureBitmap = new Bitmap(@"texture.jpg");
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    for (int x = 0; x < bitmap.Width; x++)
+                    {
+                        bitmap.SetPixel(x, y, PixelFilters.wrinkledTextureFilter(
+                            bitmap.GetPixel(x, y), 
+                            textureBitmap.GetPixel(x % textureBitmap.Width, y % textureBitmap.Height)
+                            ));
+                    }
+                }
+                //save (write) sepia image
+                bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
+            }
+        }
     }
 }
