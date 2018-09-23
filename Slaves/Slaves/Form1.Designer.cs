@@ -39,6 +39,8 @@
             this.status = new System.Windows.Forms.StatusStrip();
             this.LINE = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.SliderValue = new System.Windows.Forms.ToolStripStatusLabel();
             this.status.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -118,7 +120,9 @@
             // 
             this.status.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.LINE,
-            this.toolStripStatusLabel2});
+            this.toolStripStatusLabel2,
+            this.toolStripStatusLabel1,
+            this.SliderValue});
             this.status.Location = new System.Drawing.Point(0, 67);
             this.status.Name = "status";
             this.status.Size = new System.Drawing.Size(203, 22);
@@ -136,6 +140,17 @@
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
             this.toolStripStatusLabel2.Size = new System.Drawing.Size(39, 17);
             this.toolStripStatusLabel2.Text = "Pixels:";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(67, 17);
+            this.toolStripStatusLabel1.Text = "Slider Value";
+            // 
+            // SliderValue
+            // 
+            this.SliderValue.Name = "SliderValue";
+            this.SliderValue.Size = new System.Drawing.Size(0, 17);
             // 
             // Form1
             // 
@@ -174,6 +189,8 @@
         private System.Windows.Forms.StatusStrip status;
         private System.Windows.Forms.ToolStripStatusLabel LINE;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel SliderValue;
     }
 }
 

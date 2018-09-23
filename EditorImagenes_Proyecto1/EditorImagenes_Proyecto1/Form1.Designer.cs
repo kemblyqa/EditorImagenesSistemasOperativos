@@ -143,7 +143,7 @@
             // 
             this.slider.BackColor = System.Drawing.Color.Linen;
             this.slider.Location = new System.Drawing.Point(77, 2);
-            this.slider.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.slider.Margin = new System.Windows.Forms.Padding(2);
             this.slider.Maximum = 64;
             this.slider.Minimum = -64;
             this.slider.Name = "slider";
@@ -151,6 +151,7 @@
             this.slider.SmallChange = 10;
             this.slider.TabIndex = 15;
             this.slider.TickFrequency = 0;
+            this.slider.Scroll += new System.EventHandler(this.slider_Scroll);
             // 
             // lblMax
             // 
