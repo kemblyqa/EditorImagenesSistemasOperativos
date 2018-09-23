@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -19,6 +21,7 @@ namespace Slaves
         int port;
         Socket socketCon;
         BackgroundWorker worker;
+        Tuple<int, int> selectedFilter;
         public Form1()
         {
             connected = false;
@@ -26,9 +29,11 @@ namespace Slaves
             worker = new BackgroundWorker();
             worker.DoWork += new DoWorkEventHandler(connectionWork);
             worker.WorkerSupportsCancellation = true;
+            selectedFilter = new Tuple<int, int>(-1, 0);
             validIP = false;
             validPORT = false;
             InitializeComponent();
+            SliderValue.Text = selectedFilter.Item2.ToString();
             Connection.Enabled = false;
         }
 
@@ -38,28 +43,48 @@ namespace Slaves
             validPORT = port > 1 && port < 65535;
             Connection.Enabled = validIP && validPORT;
         }
+        private byte[] sendInt(int msg)
+        {
+            socketCon = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            socketCon.Connect(new IPEndPoint(ipAddress, port));
+            byte[] bytes = new byte[1024];
+            socketCon.Send(BitConverter.GetBytes(msg));
+            socketCon.Receive(bytes);
+
+            socketCon.Shutdown(SocketShutdown.Both);
+            socketCon.Close();
+            return bytes;
+        }
         private void connectionWork(object sender, DoWorkEventArgs e)
         {
             while (!worker.CancellationPending)
             {
-                byte[] bytes = new byte[1024];
-                socketCon = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                if (selectedFilter.Item1 == -1)
+                {
+                    byte[] objectBytes = sendInt(0);
+                    var mStream = new MemoryStream();
+                    var binFormatter = new BinaryFormatter();
 
-                socketCon.Connect(new IPEndPoint(ipAddress, port));
+                    // Where 'objectBytes' is your byte array.
+                    mStream.Write(objectBytes, 0, objectBytes.Length);
+                    mStream.Position = 0;
+                    selectedFilter = binFormatter.Deserialize(mStream) as Tuple<int, int>;
+                    SliderValue.Text = selectedFilter.Item2.ToString();
+                }
+                else
+                {
+                    byte[] objectBytes = sendInt(Environment.ProcessorCount);
+                    var mStream = new MemoryStream();
+                    var binFormatter = new BinaryFormatter();
 
-                // Encode the data string into a byte array.  
-                byte[] msg = Encoding.ASCII.GetBytes("Enviado<EOF>");
+                    // Where 'objectBytes' is your byte array.
+                    mStream.Write(objectBytes, 0, objectBytes.Length);
+                    mStream.Position = 0;
 
-                // Send the data through the socket.  
-                int bytesSent = socketCon.Send(msg);
-
-                // Receive the response from the remote device.  
-                int bytesRec = socketCon.Receive(bytes);
-                Console.WriteLine("Echoed test = {0}",
-                    Encoding.ASCII.GetString(bytes, 0, bytesRec));
-                // Release the socket.  
-                socketCon.Shutdown(SocketShutdown.Both);
-                socketCon.Close();
+                    Tuple<int,List<Color>> myObject = binFormatter.Deserialize(mStream) as Tuple<int, List<Color>>;
+                    if(myObject.Item2 == null)
+                        selectedFilter = new Tuple<int, int>(-1, 0);
+                }
             }
         }
         private void connection(object sender, EventArgs e)
