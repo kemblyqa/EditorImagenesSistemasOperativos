@@ -69,7 +69,7 @@
             "Gamma",
             "Contraste",
             "Chaos",
-            "SomeTexture",
+            "Wrinkle Texture",
             "Distorción"});
             this.cmbFilters.Location = new System.Drawing.Point(98, 43);
             this.cmbFilters.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
@@ -83,12 +83,12 @@
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(130, 23);
+            this.label3.Location = new System.Drawing.Point(115, 22);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(109, 19);
+            this.label3.Size = new System.Drawing.Size(135, 19);
             this.label3.TabIndex = 6;
-            this.label3.Text = "Filters to apply";
+            this.label3.Text = "Filtros para aplicar";
             // 
             // btnGenerateImg
             // 
@@ -98,7 +98,7 @@
             this.btnGenerateImg.Name = "btnGenerateImg";
             this.btnGenerateImg.Size = new System.Drawing.Size(148, 30);
             this.btnGenerateImg.TabIndex = 6;
-            this.btnGenerateImg.Text = "Generate image";
+            this.btnGenerateImg.Text = "Generar imagen";
             this.btnGenerateImg.UseVisualStyleBackColor = true;
             this.btnGenerateImg.Click += new System.EventHandler(this.btnGenerateImg_Click);
             // 
@@ -111,10 +111,10 @@
             this.rdbSequential.Location = new System.Drawing.Point(75, 141);
             this.rdbSequential.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.rdbSequential.Name = "rdbSequential";
-            this.rdbSequential.Size = new System.Drawing.Size(89, 23);
+            this.rdbSequential.Size = new System.Drawing.Size(91, 23);
             this.rdbSequential.TabIndex = 4;
             this.rdbSequential.TabStop = true;
-            this.rdbSequential.Text = "Sequential";
+            this.rdbSequential.Text = "Secuencial";
             this.rdbSequential.UseVisualStyleBackColor = false;
             // 
             // rdbParallelism
@@ -125,9 +125,9 @@
             this.rdbParallelism.Location = new System.Drawing.Point(196, 141);
             this.rdbParallelism.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.rdbParallelism.Name = "rdbParallelism";
-            this.rdbParallelism.Size = new System.Drawing.Size(91, 23);
+            this.rdbParallelism.Size = new System.Drawing.Size(102, 23);
             this.rdbParallelism.TabIndex = 5;
-            this.rdbParallelism.Text = "Parallelism";
+            this.rdbParallelism.Text = "Concurrente";
             this.rdbParallelism.UseVisualStyleBackColor = false;
             // 
             // panelCompress
@@ -139,7 +139,7 @@
             this.panelCompress.Controls.Add(this.lblMin);
             this.panelCompress.Location = new System.Drawing.Point(10, 82);
             this.panelCompress.Name = "panelCompress";
-            this.panelCompress.Size = new System.Drawing.Size(366, 54);
+            this.panelCompress.Size = new System.Drawing.Size(381, 54);
             this.panelCompress.TabIndex = 15;
             this.panelCompress.Visible = false;
             // 
@@ -162,12 +162,12 @@
             this.lblMax.AutoSize = true;
             this.lblMax.BackColor = System.Drawing.Color.Transparent;
             this.lblMax.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMax.Location = new System.Drawing.Point(306, 20);
+            this.lblMax.Location = new System.Drawing.Point(283, 20);
             this.lblMax.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblMax.Name = "lblMax";
             this.lblMax.Size = new System.Drawing.Size(59, 19);
             this.lblMax.TabIndex = 14;
-            this.lblMax.Text = "Maximo";
+            this.lblMax.Text = "Máximo";
             // 
             // lblPorcentajeCompresion
             // 
@@ -190,7 +190,7 @@
             this.lblMin.Name = "lblMin";
             this.lblMin.Size = new System.Drawing.Size(55, 19);
             this.lblMin.TabIndex = 16;
-            this.lblMin.Text = "Minimo";
+            this.lblMin.Text = "Mínimo";
             // 
             // ServeButton
             // 
@@ -218,11 +218,11 @@
             // txtTime
             // 
             this.txtTime.Enabled = false;
-            this.txtTime.Location = new System.Drawing.Point(207, 234);
+            this.txtTime.Location = new System.Drawing.Point(205, 234);
             this.txtTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtTime.Name = "txtTime";
             this.txtTime.ReadOnly = true;
-            this.txtTime.Size = new System.Drawing.Size(50, 20);
+            this.txtTime.Size = new System.Drawing.Size(65, 20);
             this.txtTime.TabIndex = 20;
             // 
             // Form1

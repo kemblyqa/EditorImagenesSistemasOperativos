@@ -279,6 +279,10 @@ namespace EditorImagenes_Proyecto1
         {
 
         }
+
+        /// <summary>
+        /// wrinkle texture
+        /// </summary>
         public static void wrinkledTexture()
         {
             Bitmap textureBitmap = new Bitmap(@"texture.jpg");
