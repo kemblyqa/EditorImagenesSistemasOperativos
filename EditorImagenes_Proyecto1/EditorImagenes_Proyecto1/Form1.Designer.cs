@@ -41,6 +41,8 @@
             this.lblPorcentajeCompresion = new System.Windows.Forms.Label();
             this.lblMin = new System.Windows.Forms.Label();
             this.ServeButton = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtTime = new System.Windows.Forms.TextBox();
             this.panelCompress.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.slider)).BeginInit();
             this.SuspendLayout();
@@ -198,12 +200,35 @@
             this.ServeButton.UseVisualStyleBackColor = true;
             this.ServeButton.Click += new System.EventHandler(this.ServeButton_Click);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(12, 253);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(134, 19);
+            this.label2.TabIndex = 19;
+            this.label2.Text = "Tiempo de ejecución";
+            // 
+            // txtTime
+            // 
+            this.txtTime.Enabled = false;
+            this.txtTime.Location = new System.Drawing.Point(151, 254);
+            this.txtTime.Name = "txtTime";
+            this.txtTime.ReadOnly = true;
+            this.txtTime.Size = new System.Drawing.Size(66, 20);
+            this.txtTime.TabIndex = 20;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(463, 343);
+            this.Controls.Add(this.txtTime);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.ServeButton);
             this.Controls.Add(this.rdbParallelism);
             this.Controls.Add(this.rdbSequential);
@@ -237,6 +262,8 @@
         private System.Windows.Forms.TrackBar slider;
         private System.Windows.Forms.Label lblPorcentajeCompresion;
         private System.Windows.Forms.Button ServeButton;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox txtTime;
     }
 }
 
