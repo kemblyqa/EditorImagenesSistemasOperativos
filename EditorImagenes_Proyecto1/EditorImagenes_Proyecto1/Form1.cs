@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,8 +16,15 @@ namespace EditorImagenes_Proyecto1
 {
     public partial class Form1 : Form
     {
+        static BackgroundWorker worker;
+        static string data;
+        static Socket handler;
         public Form1()
         {
+            worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler(StartListening);
+            worker.WorkerSupportsCancellation = true;
+            data = null;
             InitializeComponent();
             cmbFilters.SelectedIndex = 0;
             panelCompress.Visible = false;
@@ -47,7 +56,7 @@ namespace EditorImagenes_Proyecto1
                         Console.WriteLine("Llamar funcion con threads");
                     break;
                 case 2:
-                    percent = (slider.Value + 64) / 128f;
+                    percent = 1f - (slider.Value + 64) / 128f;
                     if (rdbParallelism.Checked)
                     {
                         FilterMonitor.addBuffer(imagesList);
@@ -145,6 +154,91 @@ namespace EditorImagenes_Proyecto1
             else
             {
                 panelCompress.Visible = true;
+            }
+        }
+        public static void StartListening(object sender, DoWorkEventArgs e)
+        {
+            // Data buffer for incoming data.  
+            byte[] bytes = new Byte[1024];
+
+            // Establish the local endpoint for the socket.  
+            // Dns.GetHostName returns the name of the   
+            // host running the application.  
+            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+            IPAddress ipAddress = null;
+            foreach (var ip in ipHostInfo.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    ipAddress = ip;
+                    break;
+                }
+            }
+            Console.WriteLine(ipAddress.ToString());
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
+
+            // Create a TCP/IP socket.  
+            Socket listener = new Socket(ipAddress.AddressFamily,
+                SocketType.Stream, ProtocolType.Tcp);
+
+            // Bind the socket to the local endpoint and   
+            // listen for incoming connections.  
+            try
+            {
+                listener.Bind(localEndPoint);
+                listener.Listen(10);
+
+                // Start listening for connections.
+                while (!worker.CancellationPending)
+                {
+                    Console.WriteLine("Waiting for a connection...");
+                    // Program is suspended while waiting for an incoming connection.  
+                    handler = listener.Accept();
+                    data = null;
+
+                    // An incoming connection needs to be processed.  
+                    while (true)
+                    {
+                        int bytesRec = handler.Receive(bytes);
+                        data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                        if (data.IndexOf("<EOF>") > -1)
+                        {
+                            break;
+                        }
+                    }
+
+                    // Show the data on the console.  
+                    Console.WriteLine("Text received : {0}", data);
+
+                    // Echo the data back to the client.  
+                    byte[] msg = Encoding.ASCII.GetBytes("Recibido<EOF>");
+
+                    handler.Send(msg);
+                }
+                handler.Shutdown(SocketShutdown.Both);
+                handler.Close();
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc.ToString());
+            }
+
+            Console.WriteLine("\nPress ENTER to continue...");
+            Console.Read();
+
+        }
+
+        private void ServeButton_Click(object sender, EventArgs e)
+        {
+            if(ServeButton.Text == "Serve")
+            {
+                worker.RunWorkerAsync();
+                ServeButton.Text = "Shutdown";
+            }
+            else
+            {
+                worker.CancelAsync();
+                ServeButton.Text = "Serve";
             }
         }
     }    

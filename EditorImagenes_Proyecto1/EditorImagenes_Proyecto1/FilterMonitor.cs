@@ -90,7 +90,8 @@ namespace EditorImagenes_Proyecto1
         //Obtiene un pixel
         public static Color getPixel(int x, int y, int img)
         {
-            return imageList[img].GetPixel(x, y);
+            lock(imageList)
+                return imageList[img].GetPixel(x, y);
         }
         //Obtiene el ancho y alto de una imagen objetivo
         public static Tuple<int,int> getDimentions(int imgTarget)
