@@ -66,7 +66,8 @@
             "Textura",
             "Gamma",
             "Contraste",
-            "Chaos"});
+            "Chaos",
+            "SomeTexture"});
             this.cmbFilters.Location = new System.Drawing.Point(76, 48);
             this.cmbFilters.Margin = new System.Windows.Forms.Padding(2);
             this.cmbFilters.Name = "cmbFilters";

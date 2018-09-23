@@ -273,5 +273,30 @@ namespace EditorImagenes_Proyecto1
                 }
             });
         }
+
+        public static void wrinkledTexture()
+        {
+            Bitmap textureBitmap = new Bitmap(@"texture.jpg");
+            Parallel.For(0, Environment.ProcessorCount,
+                index =>
+                {
+                    Tuple<int, int, int> pixel;
+                    pixel = FilterMonitor.getNext();
+                    Color nextPixel;
+                    while (pixel != null)
+                    {
+                        nextPixel = FilterMonitor.getPixel(pixel.Item1, pixel.Item2, pixel.Item3);
+                        Color newPixel;
+                        lock (textureBitmap)
+                            newPixel = PixelFilters.wrinkledTextureFilter(nextPixel, textureBitmap.GetPixel(pixel.Item1 % textureBitmap.Width, pixel.Item2 % textureBitmap.Height));
+                        FilterMonitor.setPixel(
+                                pixel.Item3,
+                                newPixel,
+                                new Tuple<int, int>(pixel.Item1, pixel.Item2));
+                        pixel = FilterMonitor.getNext();
+                    }
+                }
+            );
+        }
     }
 }
