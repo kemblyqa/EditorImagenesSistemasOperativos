@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -241,6 +243,45 @@ namespace EditorImagenes_Proyecto1
                 b = tb;
             }
             return Color.FromArgb(a, r, g, b);
+        }
+
+        public static ImageCodecInfo GetEncoder(ImageFormat format)
+        {
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
+            foreach (ImageCodecInfo codec in codecs)
+            {
+                if (codec.FormatID == format.Guid)
+                {
+                    return codec;
+                }
+            }
+            return null;
+        }
+
+        public static ImageFormat ParseImageFormat(string formato)
+        {
+            ImageFormat formatoFinal = ImageFormat.Jpeg;
+            switch (formato.ToString().ToLower())
+            {                
+                case "png":
+                    formatoFinal = ImageFormat.Png;
+                    break;
+                case "jpeg":
+                    formatoFinal = ImageFormat.Jpeg;
+                    break;
+
+                case "bmp":
+                    formatoFinal = ImageFormat.Bmp;
+                    break;
+
+                case "icon":
+                    formatoFinal = ImageFormat.Icon;
+                    break;
+                case "emf":
+                    formatoFinal = ImageFormat.Emf;
+                    break;
+            }
+            return formatoFinal;
         }
     }
 }

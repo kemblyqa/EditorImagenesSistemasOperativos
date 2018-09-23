@@ -151,7 +151,6 @@
             this.slider.SmallChange = 10;
             this.slider.TabIndex = 15;
             this.slider.TickFrequency = 0;
-            this.slider.ValueChanged += new System.EventHandler(this.slider_ValueChanged);
             // 
             // lblMax
             // 

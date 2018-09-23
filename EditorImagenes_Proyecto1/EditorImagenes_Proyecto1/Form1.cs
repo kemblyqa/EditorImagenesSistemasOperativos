@@ -35,7 +35,7 @@ namespace EditorImagenes_Proyecto1
         {
             // images files
             btnGenerateImg.Enabled = false;
-            string[] imagesList = Directory.GetFiles(@"InputImages\\");
+            string[] imagesList = Directory.GetFiles(@"InputImages\\");            
             FilterMonitor.refresh();
             float percent = 0;
             switch (cmbFilters.SelectedIndex)
@@ -49,11 +49,14 @@ namespace EditorImagenes_Proyecto1
                     else
                         SequentialImageFilter.grayScale(imagesList);
                     break;
-                case 1:
+                case 1: // sepia
                     if (rdbSequential.Checked)
                         SequentialImageFilter.sepia(imagesList);
                     else
-                        Console.WriteLine("Llamar funcion con threads");
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.sepiaFilter();
+                    }
                     break;
                 case 2:
                     percent = 1f - (slider.Value + 64) / 128f;
@@ -65,11 +68,14 @@ namespace EditorImagenes_Proyecto1
                     else
                         SequentialImageFilter.opacityFilter(imagesList, percent);
                     break;
-                case 3:
+                case 3: // invest colors
                     if (rdbSequential.Checked)
                         SequentialImageFilter.investColorsFunction(imagesList);
                     else
-                        Console.WriteLine("Llamar funcion con threads");
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.investColorFilter();
+                    }
                     break;
                 case 4:
                     percent = (slider.Value + 64) / 128f;
@@ -89,8 +95,12 @@ namespace EditorImagenes_Proyecto1
                     break;
                 case 6:
                     int compressionLevel = (int)(((slider.Value + 64) * 95) / 128f);
-                    SequentialImageFilter.VaryQualityLevel(imagesList, compressionLevel);
-                    // Compresión
+                    if (rdbSequential.Checked)
+                        SequentialImageFilter.compressionFilter(imagesList, compressionLevel);
+                    else
+                    {
+                        ConcurrentImageFilter.compressionFilter(compressionLevel, imagesList);
+                    }
                     break;
                 case 7:
                     int segments = (int)(((slider.Value+64)*7)/128f);
@@ -137,13 +147,7 @@ namespace EditorImagenes_Proyecto1
                     break;
             }
             btnGenerateImg.Enabled = true;
-        }
-
-        private void slider_ValueChanged(object sender, EventArgs e)
-        {
-            lblPorcentajeCompresion.Text = slider.Value + "%";
-            
-        }
+        }        
 
         private void cmbFilters_SelectedIndexChanged(object sender, EventArgs e)
         {
