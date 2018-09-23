@@ -259,8 +259,6 @@ namespace EditorImagenes_Proyecto1
             {
                 using (Bitmap bmp1 = new Bitmap(imagen))
                 {
-                    PixelFilters.GetEncoder(PixelFilters.ParseImageFormat(imagen.Split('.')[imagen.Split('.').Length - 1]));
-
                     System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
 
                     EncoderParameters myEncoderParameters = new EncoderParameters(1);
