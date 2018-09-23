@@ -11,28 +11,6 @@ namespace EditorImagenes_Proyecto1
 {
     class SequentialImageFilter
     {
-        /*
-        private Bitmap compresssImageFunction(Bitmap imagen, long calidad)
-        {
-            System.Drawing.Imaging.Encoder myEncoder;
-            EncoderParameter myEncoderParameter;
-            EncoderParameters myEncoderParameters;
-
-            ImageCodecInfo myImageCodecInfo = GetEncoderInfo("image/jpeg");
-            myEncoder = System.Drawing.Imaging.Encoder.Quality;
-            myEncoderParameters = new EncoderParameters(1);
-            myEncoderParameter = new EncoderParameter(myEncoder, calidad);
-            myEncoderParameters.Param[0] = myEncoderParameter;
-            MemoryStream ms = new MemoryStream();
-            imagen.Save(ms, myImageCodecInfo, myEncoderParameters);
-            return new Bitmap(ms);
-        }
-
-        private ImageCodecInfo GetEncoderInfo(string v)
-        {
-            throw new NotImplementedException();
-        }*/
-
         public static void compressionFilter(string[]  imagesList, float compressionPorcentage)
         {
             string num = compressionPorcentage.ToString();
@@ -41,7 +19,7 @@ namespace EditorImagenes_Proyecto1
             {
                 // Get a bitmap. The using statement ensures objects  
                 // are automatically disposed from memory after use.  
-                using (Bitmap bmp1 = new Bitmap(imagesList[i]))
+                using (Bitmap bmp = new Bitmap(imagesList[i]))
                 {
                     ImageCodecInfo jpgEncoder = PixelFilters.GetEncoder(ImageFormat.Jpeg);//jpeg
 
@@ -57,7 +35,7 @@ namespace EditorImagenes_Proyecto1
                     
                     EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, numero);
                     myEncoderParameters.Param[0] = myEncoderParameter;
-                    bmp1.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]), jpgEncoder, myEncoderParameters);
+                    bmp.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]), jpgEncoder, myEncoderParameters);
                 }
             }
         }

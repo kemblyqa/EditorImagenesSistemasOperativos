@@ -138,13 +138,7 @@ namespace EditorImagenes_Proyecto1
                     break;
             }
             btnGenerateImg.Enabled = true;
-        }
-
-        private void slider_ValueChanged(object sender, EventArgs e)
-        {
-            lblPorcentajeCompresion.Text = slider.Value + "%";
-            
-        }
+        }        
 
         private void cmbFilters_SelectedIndexChanged(object sender, EventArgs e)
         {

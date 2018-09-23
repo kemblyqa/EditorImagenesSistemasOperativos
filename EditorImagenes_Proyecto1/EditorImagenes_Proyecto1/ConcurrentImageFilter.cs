@@ -257,7 +257,7 @@ namespace EditorImagenes_Proyecto1
             long numero = Convert.ToInt64(num);
             Parallel.ForEach(imagesList, imagen =>
             {
-                using (Bitmap bmp1 = new Bitmap(imagen))
+                using (Bitmap bmp = new Bitmap(imagen))
                 {
                     System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
 
@@ -266,7 +266,7 @@ namespace EditorImagenes_Proyecto1
                     EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, numero);
                     myEncoderParameters.Param[0] = myEncoderParameter;
 
-                    bmp1.Save(@"OutputImages\\" + Path.GetFileName(imagen),
+                    bmp.Save(@"OutputImages\\" + Path.GetFileName(imagen),
                         PixelFilters.GetEncoder(PixelFilters.ParseImageFormat(imagen.Split('.')[imagen.Split('.').Length - 1])), 
                         myEncoderParameters
                     );
