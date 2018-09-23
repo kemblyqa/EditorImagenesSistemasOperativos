@@ -71,9 +71,9 @@ namespace EditorImagenes_Proyecto1
                 case 4:
                     percent = (slider.Value + 64) / 128f;
                     if (rdbSequential.Checked)
-                        SequentialImageFilter.gaussianFilter(imagesList, (int)percent * 5);
+                        SequentialImageFilter.gaussianFilter(imagesList, (int)percent * 5 + 1);
                     else
-                        SequentialImageFilter.gaussianFilter(imagesList, (int)percent * 5);
+                        SequentialImageFilter.gaussianFilter(imagesList, (int)percent * 5 + 1);
                     break;
                 case 5:
                     if (rdbParallelism.Checked)
