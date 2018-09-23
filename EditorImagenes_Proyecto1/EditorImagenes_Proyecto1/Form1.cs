@@ -142,6 +142,11 @@ namespace EditorImagenes_Proyecto1
                     else
                         SequentialImageFilter.chaosFilter(imagesList, (slider.Value + 64) * 2);
                     break;
+                case 12:
+                    int level = (int)(((slider.Value + 64) * 19) / 128f);
+                    if (rdbSequential.Checked)
+                        SequentialImageFilter.distortionFilter(imagesList, level);
+                    break;
                 default:
                     Console.WriteLine("Error detectado");
                     break;
@@ -158,6 +163,17 @@ namespace EditorImagenes_Proyecto1
             else
             {
                 panelCompress.Visible = true;
+            }
+
+            if(cmbFilters.SelectedIndex == 6 | cmbFilters.SelectedIndex == 12)
+            {
+                lblMin.Text = "Maximo";
+                lblMax.Text = "Minimo";
+            }
+            else
+            {
+                lblMax.Text = "Maximo";
+                lblMin.Text = "Minimo";
             }
         }
         public static void StartListening(object sender, DoWorkEventArgs e)

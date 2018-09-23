@@ -283,5 +283,6 @@ namespace EditorImagenes_Proyecto1
             }
             return formatoFinal;
         }
+        
     }
 }

@@ -248,5 +248,40 @@ namespace EditorImagenes_Proyecto1
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
+
+        public static void distortionFilter(string [] imagesList, int level)
+        {
+            Random rndm = new Random();
+            int numRandom;
+            Byte rojo, azul, verde, alpha;
+            for (int i = 0; i < imagesList.Length; i++)
+            {
+                Bitmap bitmap = new Bitmap(imagesList[i]);
+
+                for (int x = 0; x < bitmap.Width; x++)
+                {
+                    for (int y = 0; y < bitmap.Height; y++)
+                    {
+                        numRandom = rndm.Next(level + 1);
+                        if(y < bitmap.Height - level & x < bitmap.Width - level)
+                        {
+                            rojo = bitmap.GetPixel(x + numRandom, y + numRandom).R;
+                            verde = bitmap.GetPixel(x + numRandom, y + numRandom).G;
+                            azul = bitmap.GetPixel(x + numRandom, y + numRandom).B;
+                            alpha = bitmap.GetPixel(x + numRandom, y + numRandom).A;
+                        }
+                        else
+                        {
+                            rojo = bitmap.GetPixel(x, y).R;
+                            verde = bitmap.GetPixel(x, y).G;
+                            azul = bitmap.GetPixel(x, y).B;
+                            alpha = bitmap.GetPixel(x, y).A;
+                        }
+                        bitmap.SetPixel(x, y, Color.FromArgb(alpha, rojo, verde, azul));
+                    }
+                }
+                bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
+            }
+        }
     }
 }
