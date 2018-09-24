@@ -70,7 +70,7 @@
             "Chaos",
             "Wrinkle Texture",
             "Distorción",
-            "Rijiso"});
+            "Rojizo"});
             this.cmbFilters.Location = new System.Drawing.Point(98, 43);
             this.cmbFilters.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbFilters.Name = "cmbFilters";
