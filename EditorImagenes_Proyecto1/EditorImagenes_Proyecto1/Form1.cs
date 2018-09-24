@@ -22,6 +22,7 @@ namespace EditorImagenes_Proyecto1
         static int data, selectedFilter, selectedValue;
         static Socket handler;
         Stopwatch sw;
+        int fixedTimeSeconds;
         public Form1()
         {
             worker = new BackgroundWorker();
@@ -163,12 +164,13 @@ namespace EditorImagenes_Proyecto1
                     break;
             }
             sw.Stop();
+            fixedTimeSeconds = (int)(sw.ElapsedMilliseconds / 1000) % 60;
             txtTime.Text =
                 (sw.ElapsedMilliseconds / 60000) +
                 ":" +
-                    (((sw.ElapsedMilliseconds / 1000) % 60 > 9) ? 
-                    "" + (sw.ElapsedMilliseconds / 1000) % 60 :
-                    "0" + (sw.ElapsedMilliseconds / 1000) % 60) + 
+                    ((fixedTimeSeconds > 9) ? 
+                    "" + fixedTimeSeconds :
+                    "0" + fixedTimeSeconds) + 
                 " s";
             btnGenerateImg.Enabled = true;
         }        
