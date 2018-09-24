@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EditorImagenes_Proyecto1
@@ -15,10 +16,10 @@ namespace EditorImagenes_Proyecto1
         public static Color sumFilter(Color pixel, int A, int R, int G, int B)
         {
             return Color.FromArgb(
-                A + pixel.A > 255 ? 255 : A + pixel.A < 0 ? 0 : A + pixel.A,
-                R + pixel.R > 255 ? 255 : R + pixel.R < 0 ? 0 : R + pixel.R,
-                G + pixel.G > 255 ? 255 : G + pixel.G < 0 ? 0 : G + pixel.G,
-                B + pixel.B > 255 ? 255 : B + pixel.B < 0 ? 0 : B + pixel.B
+                Math.Abs(A + pixel.A) % 256,
+                Math.Abs(R + pixel.R) % 256,
+                Math.Abs(G + pixel.G) % 256,
+                Math.Abs(B + pixel.B) % 256
                 );
         }
 
@@ -68,11 +69,11 @@ namespace EditorImagenes_Proyecto1
         {
             int xLimit = x + radious < img.Width ? x + radious : img.Width - 1;
             int yLimit = y + radious < img.Height ? y + radious : img.Height - 1;
-            int r = 0;int g = 0;int b = 0;
+            int r = 0; int g = 0; int b = 0;
             Color aux;
             int c = 0;
             for (int w = (Math.Abs(x - radious) + (x - radious)) / 2; w < xLimit; w++)
-                for(int h = (Math.Abs(y-radious) + (y-radious))/2; h < yLimit; h++)
+                for (int h = (Math.Abs(y - radious) + (y - radious)) / 2; h < yLimit; h++)
                 {
                     aux = img.GetPixel(w, h);
                     r += aux.R;
@@ -80,7 +81,7 @@ namespace EditorImagenes_Proyecto1
                     b += aux.B;
                     c++;
                 }
-            return Color.FromArgb(r/c, g/c, b/c);
+            return Color.FromArgb(r / c, g / c, b / c);
         }
 
         /// <summary>

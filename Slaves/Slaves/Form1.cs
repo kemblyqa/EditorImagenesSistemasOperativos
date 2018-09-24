@@ -18,7 +18,7 @@ namespace Slaves
     {
         bool connected, validIP, validPORT;
         IPAddress ipAddress;
-        int port;
+        int port, c;
         Socket socketCon;
         BackgroundWorker worker;
         Tuple<int, int> selectedFilter;
@@ -32,6 +32,7 @@ namespace Slaves
             selectedFilter = new Tuple<int, int>(-1, 0);
             validIP = false;
             validPORT = false;
+            c = 0;
             InitializeComponent();
             SliderValue.Text = selectedFilter.Item2.ToString();
             Connection.Enabled = false;
@@ -43,12 +44,18 @@ namespace Slaves
             validPORT = port > 1 && port < 65535;
             Connection.Enabled = validIP && validPORT;
         }
-        private byte[] sendInt(int msg)
+        private byte[] sendMsg(Tuple<int, int, int, Color> msg)
         {
             socketCon = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             socketCon.Connect(new IPEndPoint(ipAddress, port));
             byte[] bytes = new byte[1024];
-            socketCon.Send(BitConverter.GetBytes(msg));
+
+            BinaryFormatter binFormatter = new BinaryFormatter();
+            MemoryStream mStream = new MemoryStream();
+
+            binFormatter.Serialize(mStream, msg);
+
+            socketCon.Send(mStream.ToArray());
             socketCon.Receive(bytes);
 
             socketCon.Shutdown(SocketShutdown.Both);
@@ -57,11 +64,12 @@ namespace Slaves
         }
         private void connectionWork(object sender, DoWorkEventArgs e)
         {
+            Tuple<int, int, int, Color> task = new Tuple<int, int, int, Color>(-2, -2, -2, Color.FromArgb(0, 255, 0));
             while (!worker.CancellationPending)
             {
                 if (selectedFilter.Item1 == -1)
                 {
-                    byte[] objectBytes = sendInt(0);
+                    byte[] objectBytes = sendMsg(new Tuple<int, int, int, Color>(-1, -1, -1, Color.FromArgb(0, 0, 0)));
                     var mStream = new MemoryStream();
                     var binFormatter = new BinaryFormatter();
 
@@ -73,7 +81,7 @@ namespace Slaves
                 }
                 else
                 {
-                    byte[] objectBytes = sendInt(Environment.ProcessorCount);
+                    byte[] objectBytes = sendMsg(task);
                     var mStream = new MemoryStream();
                     var binFormatter = new BinaryFormatter();
 
@@ -81,8 +89,8 @@ namespace Slaves
                     mStream.Write(objectBytes, 0, objectBytes.Length);
                     mStream.Position = 0;
 
-                    Tuple<int,List<Color>> myObject = binFormatter.Deserialize(mStream) as Tuple<int, List<Color>>;
-                    if(myObject.Item2 == null)
+                    task = binFormatter.Deserialize(mStream) as Tuple<int, int, int, Color>;
+                    if (task.Item1 == -1)
                         selectedFilter = new Tuple<int, int>(-1, 0);
                 }
             }
