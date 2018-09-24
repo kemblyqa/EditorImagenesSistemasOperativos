@@ -171,7 +171,7 @@ namespace EditorImagenes_Proyecto1
                     else
                     {
                         FilterMonitor.addBuffer(imagesList);
-                        ConcurrentImageFilter.distortionFilter();
+                        ConcurrentImageFilter.distortionFilter(level);
                     }
                     break;
                 case 13:
