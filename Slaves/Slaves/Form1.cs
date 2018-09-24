@@ -18,7 +18,8 @@ namespace Slaves
     {
         bool connected, validIP, validPORT;
         IPAddress ipAddress;
-        int port, c;
+        int port;
+        long c;
         Socket socketCon;
         BackgroundWorker worker;
         Tuple<int, int> selectedFilter;
@@ -90,8 +91,14 @@ namespace Slaves
                     mStream.Position = 0;
 
                     task = binFormatter.Deserialize(mStream) as Tuple<int, int, int, Color>;
-                    if (task.Item1 == -1)
+                    if (task.Item1 == -2)
                         selectedFilter = new Tuple<int, int>(-1, 0);
+                    else
+                    {
+                        c++;
+                        if(c%1000==0)
+                            pixels.Text = c + "Pixeles en este esclavo";
+                    }
                 }
             }
         }
