@@ -155,8 +155,14 @@ namespace EditorImagenes_Proyecto1
                     break;
                 case 13:
                     int level = (int)(((slider.Value + 64) * 19) / 128f);
+                    
                     if (rdbSequential.Checked)
                         SequentialImageFilter.distortionFilter(imagesList, level);
+                    else
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.distortionFilter(level);
+                    }
                     break;
                 default:
                     Console.WriteLine("Error detectado");
@@ -179,7 +185,7 @@ namespace EditorImagenes_Proyecto1
                 panelCompress.Visible = true;
             }
 
-            if(cmbFilters.SelectedIndex == 6 | cmbFilters.SelectedIndex == 13)
+            if(cmbFilters.SelectedIndex == 6)
             {
                 lblMin.Text = "Maximo";
                 lblMax.Text = "Minimo";

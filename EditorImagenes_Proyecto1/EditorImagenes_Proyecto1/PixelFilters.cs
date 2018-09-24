@@ -291,6 +291,6 @@ namespace EditorImagenes_Proyecto1
                 (int)(pixel.G * (texturePixel.G / 255f)),
                 (int)(pixel.B * (texturePixel.B / 255f))
             );
-        }
+        }        
     }
 }
