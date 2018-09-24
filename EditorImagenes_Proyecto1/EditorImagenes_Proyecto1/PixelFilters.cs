@@ -284,10 +284,16 @@ namespace EditorImagenes_Proyecto1
             return formatoFinal;
         }
 
+        /// <summary>
+        /// apply texture "wrinkle"
+        /// </summary>
+        /// <param name="pixel">pixel to modify</param>
+        /// <param name="texturePixel">texture pixel to apply to current pixel</param>
+        /// <returns>pixel modified</returns>
         public static Color wrinkledTextureFilter(Color pixel, Color texturePixel)
         {
             return Color.FromArgb(
-                (int)( pixel.R * (texturePixel.R / 255f)),
+                (int)(pixel.R * (texturePixel.R / 255f)),
                 (int)(pixel.G * (texturePixel.G / 255f)),
                 (int)(pixel.B * (texturePixel.B / 255f))
             );
