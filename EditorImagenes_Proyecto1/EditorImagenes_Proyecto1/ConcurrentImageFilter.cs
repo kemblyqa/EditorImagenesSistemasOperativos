@@ -253,8 +253,7 @@ namespace EditorImagenes_Proyecto1
         }
 
         public static void distortionFilter(int level)
-        {
-            Byte rojo, azul, verde, alpha;            
+        {          
             Random rndm = new Random();
             int numRandom;
             Parallel.For(0, Environment.ProcessorCount,

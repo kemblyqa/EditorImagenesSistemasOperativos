@@ -57,10 +57,17 @@ namespace Slaves
             binFormatter.Serialize(mStream, msg);
 
             socketCon.Send(mStream.ToArray());
-            socketCon.Receive(bytes);
+            try
+            {
+                socketCon.Receive(bytes);
+            }
+            catch (Exception e)
+            {
+                socketCon.Shutdown(SocketShutdown.Both);
+                socketCon.Close();
+                return null;
+            }
 
-            socketCon.Shutdown(SocketShutdown.Both);
-            socketCon.Close();
             return bytes;
         }
         private void connectionWork(object sender, DoWorkEventArgs e)
@@ -71,6 +78,8 @@ namespace Slaves
                 if (selectedFilter.Item1 == -1)
                 {
                     byte[] objectBytes = sendMsg(new Tuple<int, int, int, Color>(-1, -1, -1, Color.FromArgb(0, 0, 0)));
+                    if (objectBytes == null)
+                        continue;
                     var mStream = new MemoryStream();
                     var binFormatter = new BinaryFormatter();
 
@@ -83,6 +92,8 @@ namespace Slaves
                 else
                 {
                     byte[] objectBytes = sendMsg(task);
+                    if (objectBytes == null)
+                        continue;
                     var mStream = new MemoryStream();
                     var binFormatter = new BinaryFormatter();
 
@@ -97,7 +108,7 @@ namespace Slaves
                     {
                         c++;
                         if(c%1000==0)
-                            pixels.Text = c + "Pixeles en este esclavo";
+                            pixels.Text = c + " Pixeles en este esclavo";
                     }
                 }
             }
