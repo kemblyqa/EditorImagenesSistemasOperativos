@@ -11,7 +11,7 @@ namespace EditorImagenes_Proyecto1
 {
     class SequentialImageFilter
     {
-        public static void compressionFilter(string[]  imagesList, float compressionPorcentage)
+        public static void compressionFilter(string[] imagesList, float compressionPorcentage)
         {
             string num = compressionPorcentage.ToString();
             long numero = Convert.ToInt64(num);
@@ -32,15 +32,15 @@ namespace EditorImagenes_Proyecto1
                     // objects. In this case, there is only one  
                     // EncoderParameter object in the array.  
                     EncoderParameters myEncoderParameters = new EncoderParameters(1);
-                    
+
                     EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, numero);
                     myEncoderParameters.Param[0] = myEncoderParameter;
                     bmp.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]), jpgEncoder, myEncoderParameters);
                 }
             }
         }
-        
-        
+
+
         /// <summary>
         /// Function where we will apply the invert color filter to the loaded image
         /// </summary>
@@ -50,7 +50,7 @@ namespace EditorImagenes_Proyecto1
             {
                 //read image
                 Bitmap bmap = new Bitmap(imagesList[imagen]);
-                
+
                 for (int i = 0; i < bmap.Width; i++)
                 {
                     for (int j = 0; j < bmap.Height; j++)
@@ -77,7 +77,6 @@ namespace EditorImagenes_Proyecto1
                         bitmap.SetPixel(x, y, PixelFilters.grayScaleFilter(bitmap.GetPixel(x, y)));
                     }
                 }
-                //save (write) sepia image
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
@@ -98,17 +97,10 @@ namespace EditorImagenes_Proyecto1
                         bitmap.SetPixel(x, y, PixelFilters.brightnessFilter(bitmap.GetPixel(x, y), brightPercentage / 100));
                     }
                 }
-                //save (write) sepia image
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
         
-        //texture **
-        public static void texture(string[] imagesList)
-        {
-            
-        }
-
         /// <summary>
         /// Function where we will apply the sepia filter to the loaded image
         /// </summary>
@@ -121,7 +113,7 @@ namespace EditorImagenes_Proyecto1
                 Bitmap bmp = new Bitmap(imagesList[i]);
                 //get image dimension
                 int width = bmp.Width;
-                int height = bmp.Height;                
+                int height = bmp.Height;
 
                 //sepia
                 for (int x = 0; x < width; x++)
@@ -131,7 +123,6 @@ namespace EditorImagenes_Proyecto1
                         bmp.SetPixel(x, y, PixelFilters.sepiaFilter(bmp.GetPixel(x, y)));
                     }
                 }
-                //save (write) sepia image
                 bmp.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
@@ -148,7 +139,6 @@ namespace EditorImagenes_Proyecto1
                     {
                         product.SetPixel(x, y, PixelFilters.opacityFilter(img.GetPixel(x, y), opacity));
                     }
-                //save (write) sepia image, i mean, opacity image
                 product.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
@@ -165,7 +155,6 @@ namespace EditorImagenes_Proyecto1
                     {
                         product.SetPixel(x, y, PixelFilters.segmentationFilter(img.GetPixel(x, y), segmentSize));
                     }
-                //save (write) segmented image
                 product.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
@@ -181,11 +170,10 @@ namespace EditorImagenes_Proyecto1
                     {
                         product.SetPixel(x, y, PixelFilters.Gauss(ref img, x, y, radious));
                     }
-                //save (write) gaussian image
                 product.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
-        
+
         /// <summary>
         /// gamma filter
         /// </summary>
@@ -204,7 +192,6 @@ namespace EditorImagenes_Proyecto1
                         bitmap.SetPixel(x, y, PixelFilters.gammaFilter(bitmap.GetPixel(x, y), gammaPercentage));
                     }
                 }
-                //save (write) sepia image
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
@@ -227,7 +214,6 @@ namespace EditorImagenes_Proyecto1
                         bitmap.SetPixel(x, y, PixelFilters.contrastFilter(bitmap.GetPixel(x, y), contrastPercentage));
                     }
                 }
-                //save (write) sepia image
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
@@ -247,7 +233,44 @@ namespace EditorImagenes_Proyecto1
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
-        ///
+
+        public static void distortionFilter(string[] imagesList, int level)
+        {
+            Random rndm = new Random();
+            int numRandom;
+            Byte rojo, azul, verde, alpha;
+            for (int i = 0; i < imagesList.Length; i++)
+            {
+                Bitmap bitmap = new Bitmap(imagesList[i]);
+
+                for (int x = 0; x < bitmap.Width; x++)
+                {
+                    for (int y = 0; y < bitmap.Height; y++)
+                    {
+                        numRandom = rndm.Next(level + 1);
+                        if (y < bitmap.Height - level & x < bitmap.Width - level)
+                        {
+                            rojo = bitmap.GetPixel(x + numRandom, y + numRandom).R;
+                            verde = bitmap.GetPixel(x + numRandom, y + numRandom).G;
+                            azul = bitmap.GetPixel(x + numRandom, y + numRandom).B;
+                            alpha = bitmap.GetPixel(x + numRandom, y + numRandom).A;
+                        }
+                        else
+                        {
+                            rojo = bitmap.GetPixel(x, y).R;
+                            verde = bitmap.GetPixel(x, y).G;
+                            azul = bitmap.GetPixel(x, y).B;
+                            alpha = bitmap.GetPixel(x, y).A;
+                        }
+                        bitmap.SetPixel(x, y, Color.FromArgb(alpha, rojo, verde, azul));
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// set a texture like is a wrinkled image
+        /// </summary>
+        /// <param name="imagesList"></param>
         public static void wrinkledTexture(string[] imagesList)
         {
             for (int i = 0; i < imagesList.Length; i++)
@@ -259,12 +282,11 @@ namespace EditorImagenes_Proyecto1
                     for (int x = 0; x < bitmap.Width; x++)
                     {
                         bitmap.SetPixel(x, y, PixelFilters.wrinkledTextureFilter(
-                            bitmap.GetPixel(x, y), 
+                            bitmap.GetPixel(x, y),
                             textureBitmap.GetPixel(x % textureBitmap.Width, y % textureBitmap.Height)
                             ));
                     }
                 }
-                //save (write) sepia image
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
