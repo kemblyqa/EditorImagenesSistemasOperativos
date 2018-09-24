@@ -98,6 +98,6 @@ namespace EditorImagenes_Proyecto1
         {
             lock (imageList)
                 return new Tuple<int, int>(imageList[imgTarget].Width, imageList[imgTarget].Height);
-        }
+        }        
     }
 }

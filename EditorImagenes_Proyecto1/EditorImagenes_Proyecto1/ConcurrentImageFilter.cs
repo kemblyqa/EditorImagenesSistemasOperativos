@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace EditorImagenes_Proyecto1
 {
     class ConcurrentImageFilter
-    {
+    {       
         /// <summary>
         /// grayscale filter
         /// </summary>
@@ -236,15 +236,48 @@ namespace EditorImagenes_Proyecto1
                 index =>
                 {
                     Tuple<int, int, int> pixel;
-                    pixel = FilterMonitor.getNext();
+                    pixel = FilterMonitor.getNext(); // devuelve x, y, index de la imagen en la lista de imagenes
                     Color nextPixel;
                     while (pixel != null)
                     {
-                        nextPixel = FilterMonitor.getPixel(pixel.Item1, pixel.Item2, pixel.Item3);
+                        nextPixel = FilterMonitor.getPixel(pixel.Item1, pixel.Item2, pixel.Item3);  //obteniendo el pixel
                         Color newPixel = PixelFilters.sepiaFilter(nextPixel);
                         FilterMonitor.setPixel(
                                 pixel.Item3,
                                 newPixel,
+                                new Tuple<int, int>(pixel.Item1, pixel.Item2));
+                        pixel = FilterMonitor.getNext();
+                    }
+                }
+            );
+        }
+
+        public static void distortionFilter(int level)
+        {
+            Byte rojo, azul, verde, alpha;            
+            Random rndm = new Random();
+            int numRandom;
+            Parallel.For(0, Environment.ProcessorCount,
+                index =>
+                {
+                    Tuple<int, int, int> pixel;
+                    pixel = FilterMonitor.getNext(); // devuelve x, y, index de la imagen en la lista de imagenes
+                    Tuple<int, int> dimensiones = FilterMonitor.getDimentions(pixel.Item3);
+                    Color nextPixel;
+                    while (pixel != null)
+                    {
+                        numRandom = rndm.Next(level + 1);
+                        if(pixel.Item1 < dimensiones.Item1 - level & pixel.Item2 < dimensiones.Item2 - level)
+                        {
+                            nextPixel = FilterMonitor.getPixel(pixel.Item1 + numRandom, pixel.Item2 + numRandom, pixel.Item3);
+                        }
+                        else
+                        {
+                            nextPixel = FilterMonitor.getPixel(pixel.Item1, pixel.Item2, pixel.Item3);
+                        }
+                        FilterMonitor.setPixel(
+                                pixel.Item3,
+                                nextPixel,
                                 new Tuple<int, int>(pixel.Item1, pixel.Item2));
                         pixel = FilterMonitor.getNext();
                     }
@@ -297,14 +330,6 @@ namespace EditorImagenes_Proyecto1
             });
         }
 
-        public static void distortionFilter()
-        {
-
-        }
-
-        /// <summary>
-        /// wrinkle texture
-        /// </summary>
         public static void wrinkledTexture()
         {
             Bitmap textureBitmap = new Bitmap(@"texture.jpg");
@@ -328,6 +353,27 @@ namespace EditorImagenes_Proyecto1
                     }
                 }
             );
+        }
+
+        public static void redFilter()
+        {
+            Parallel.For(0, Environment.ProcessorCount,
+                   index =>
+                   {
+                       Tuple<int, int, int> pixel;
+                       pixel = FilterMonitor.getNext();
+                       Color nextPixel;
+                       while (pixel != null)
+                       {
+                           nextPixel = FilterMonitor.getPixel(pixel.Item1, pixel.Item2, pixel.Item3);
+                           Color newPixel = PixelFilters.redFilter(nextPixel);
+                           FilterMonitor.setPixel(
+                                   pixel.Item3,
+                                   newPixel,
+                                   new Tuple<int, int>(pixel.Item1, pixel.Item2));
+                           pixel = FilterMonitor.getNext();
+                       }
+                   });
         }
     }
 }
