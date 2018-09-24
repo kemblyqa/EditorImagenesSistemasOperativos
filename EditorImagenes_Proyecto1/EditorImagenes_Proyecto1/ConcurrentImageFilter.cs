@@ -240,12 +240,12 @@ namespace EditorImagenes_Proyecto1
                 {
                     Tuple<int, int, int> pixel;
                     pixel = FilterMonitor.getNext(); // devuelve x, y, index de la imagen en la lista de imagenes
-                    Tuple<int, int> dimeniones = FilterMonitor.getDimentions(pixel.Item3);
+                    Tuple<int, int> dimensiones = FilterMonitor.getDimentions(pixel.Item3);
                     Color nextPixel;
                     while (pixel != null)
                     {
                         numRandom = rndm.Next(level + 1);
-                        if(pixel.Item1 < dimeniones.Item1 - level & pixel.Item2 < dimeniones.Item2 - level)
+                        if(pixel.Item1 < dimensiones.Item1 - level & pixel.Item2 < dimensiones.Item2 - level)
                         {
                             nextPixel = FilterMonitor.getPixel(pixel.Item1 + numRandom, pixel.Item2 + numRandom, pixel.Item3);
                         }
@@ -331,6 +331,27 @@ namespace EditorImagenes_Proyecto1
                     }
                 }
             );
+        }
+
+        public static void redFilter()
+        {
+            Parallel.For(0, Environment.ProcessorCount,
+                   index =>
+                   {
+                       Tuple<int, int, int> pixel;
+                       pixel = FilterMonitor.getNext();
+                       Color nextPixel;
+                       while (pixel != null)
+                       {
+                           nextPixel = FilterMonitor.getPixel(pixel.Item1, pixel.Item2, pixel.Item3);
+                           Color newPixel = PixelFilters.redFilter(nextPixel);
+                           FilterMonitor.setPixel(
+                                   pixel.Item3,
+                                   newPixel,
+                                   new Tuple<int, int>(pixel.Item1, pixel.Item2));
+                           pixel = FilterMonitor.getNext();
+                       }
+                   });
         }
     }
 }

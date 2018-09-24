@@ -22,6 +22,7 @@ namespace EditorImagenes_Proyecto1
         static int data, selectedFilter, selectedValue;
         static Socket handler;
         Stopwatch sw;
+        int fixedTimeSeconds;
         public Form1()
         {
             worker = new BackgroundWorker();
@@ -117,7 +118,7 @@ namespace EditorImagenes_Proyecto1
                     else
                         SequentialImageFilter.segmentationFilter(imagesList, (int)Math.Pow(2, segments));
                     break;
-                case 9:
+                case 8:
                     if (rdbParallelism.Checked)
                     {
                         FilterMonitor.addBuffer(imagesList);
@@ -126,7 +127,7 @@ namespace EditorImagenes_Proyecto1
                     else
                         SequentialImageFilter.gammaFilter(imagesList, slider.Value);
                     break;
-                case 10:
+                case 9:
                     if (rdbParallelism.Checked)
                     {
                         FilterMonitor.addBuffer(imagesList);
@@ -135,7 +136,7 @@ namespace EditorImagenes_Proyecto1
                     else
                         SequentialImageFilter.contrastFilter(imagesList, slider.Value);
                     break;
-                case 11:
+                case 10:
                     if (rdbParallelism.Checked)
                     {
                         FilterMonitor.addBuffer(imagesList);
@@ -144,7 +145,7 @@ namespace EditorImagenes_Proyecto1
                     else
                         SequentialImageFilter.chaosFilter(imagesList, (slider.Value + 64) * 2);
                     break;
-                case 12:
+                case 11:
                     if (rdbParallelism.Checked)
                     {
                         FilterMonitor.addBuffer(imagesList);
@@ -153,7 +154,7 @@ namespace EditorImagenes_Proyecto1
                     else
                         SequentialImageFilter.wrinkledTexture(imagesList);
                     break;
-                case 13:
+                case 12:
                     int level = (int)(((slider.Value + 64) * 19) / 128f);
                     
                     if (rdbSequential.Checked)
@@ -163,18 +164,22 @@ namespace EditorImagenes_Proyecto1
                         FilterMonitor.addBuffer(imagesList);
                         ConcurrentImageFilter.distortionFilter(level);
                     }
-                    break;                
+                    break;
+                case 13:
+                    SequentialImageFilter.redFilter(imagesList);
+                    break;
                 default:
                     Console.WriteLine("Error detectado");
                     break;
             }
             sw.Stop();
+            fixedTimeSeconds = (int)(sw.ElapsedMilliseconds / 1000) % 60;
             txtTime.Text =
                 (sw.ElapsedMilliseconds / 60000) +
                 ":" +
-                    (((sw.ElapsedMilliseconds / 1000) % 60 > 9) ? 
-                    "" + (sw.ElapsedMilliseconds / 1000) % 60 :
-                    "0" + (sw.ElapsedMilliseconds / 1000) % 60) + 
+                    ((fixedTimeSeconds > 9) ? 
+                    "" + fixedTimeSeconds :
+                    "0" + fixedTimeSeconds) + 
                 " s";
             btnGenerateImg.Enabled = true;
         }        
@@ -184,8 +189,8 @@ namespace EditorImagenes_Proyecto1
             txtTime.Text = "";
             if (cmbFilters.SelectedIndex == 0 
                 || cmbFilters.SelectedIndex == 1 
-                || cmbFilters.SelectedIndex == 3 
-                || cmbFilters.SelectedIndex == 12)
+                || cmbFilters.SelectedIndex == 3
+                || cmbFilters.SelectedIndex == 13)
             {
                 panelCompress.Visible = false;
             }
