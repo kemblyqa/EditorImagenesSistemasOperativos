@@ -263,9 +263,9 @@ namespace EditorImagenes_Proyecto1
                     // Where 'objectBytes' is your byte array.
                     mStream.Write(bytes, 0, bytes.Length);
                     mStream.Position = 0;
-                    
-                    Tuple<int,int,int,Color> data = binFormatter.Deserialize(mStream) as Tuple<int,int,int,Color>;
-                    if (data.Item1 == -1)
+
+                    Int16[] data = binFormatter.Deserialize(mStream) as Int16[];
+                    if (data[0] == -1)
                     {
                         Tuple<int, int> aux = new Tuple<int, int>(selectedFilter, selectedValue);
                         binFormatter = new BinaryFormatter();
@@ -275,8 +275,8 @@ namespace EditorImagenes_Proyecto1
                     }
                     else
                     {
-                        if (data.Item1 != -2)
-                            FilterMonitor.setPixel(data.Item3, data.Item4, new Tuple<int, int>(data.Item1, data.Item2));
+                        if (data[0] != -2)
+                            FilterMonitor.setPixel(data[2], Color.FromArgb(data[3], data[4], data[5], data[6]), new Tuple<int, int>(data[0], data[1]));
                         Tuple<int, int, int> nextPixel = FilterMonitor.getNext();
                         Color pixel = Color.FromArgb(0, 0, 0);
 
@@ -285,7 +285,14 @@ namespace EditorImagenes_Proyecto1
                         else
                             nextPixel = new Tuple<int, int, int>(-2, -2, -2);
 
-                        Tuple<int, int, int, Color> aux = new Tuple<int, int, int, Color>(nextPixel.Item1, nextPixel.Item2, nextPixel.Item3, pixel);
+                        Int16[] aux = new Int16[7] {
+                            (Int16)nextPixel.Item1,
+                            (Int16)nextPixel.Item2,
+                            (Int16)nextPixel.Item3,
+                            pixel.A,
+                            pixel.R,
+                            pixel.G,
+                            pixel.B};
                         binFormatter = new BinaryFormatter();
                         mStream = new MemoryStream();
                         binFormatter.Serialize(mStream, aux);

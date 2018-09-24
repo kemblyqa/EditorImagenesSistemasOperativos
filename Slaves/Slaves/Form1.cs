@@ -45,20 +45,21 @@ namespace Slaves
             validPORT = port > 1 && port < 65535;
             Connection.Enabled = validIP && validPORT;
         }
-        private byte[] sendMsg(Tuple<int, int, int, Color> msg)
+        private byte[] sendMsg(Int16[] msg)
         {
             socketCon = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            socketCon.Connect(new IPEndPoint(ipAddress, port));
-            byte[] bytes = new byte[1024];
-
-            BinaryFormatter binFormatter = new BinaryFormatter();
-            MemoryStream mStream = new MemoryStream();
-
-            binFormatter.Serialize(mStream, msg);
-
-            socketCon.Send(mStream.ToArray());
+            byte[] bytes;
             try
             {
+                socketCon.Connect(new IPEndPoint(ipAddress, port));
+
+                BinaryFormatter binFormatter = new BinaryFormatter();
+                MemoryStream mStream = new MemoryStream();
+
+                binFormatter.Serialize(mStream, msg);
+
+                socketCon.Send(mStream.ToArray());
+                bytes = new byte[1024];
                 socketCon.Receive(bytes);
             }
             catch (Exception e)
@@ -72,12 +73,12 @@ namespace Slaves
         }
         private void connectionWork(object sender, DoWorkEventArgs e)
         {
-            Tuple<int, int, int, Color> task = new Tuple<int, int, int, Color>(-2, -2, -2, Color.FromArgb(0, 255, 0));
+            Int16[] task = new Int16[7] { -2, -2, -2, 255, 255, 255, 255 };
             while (!worker.CancellationPending)
             {
                 if (selectedFilter.Item1 == -1)
                 {
-                    byte[] objectBytes = sendMsg(new Tuple<int, int, int, Color>(-1, -1, -1, Color.FromArgb(0, 0, 0)));
+                    byte[] objectBytes = sendMsg(new Int16[7] { -1, -1, -1, 255, 0, 0, 0 });
                     if (objectBytes == null)
                         continue;
                     var mStream = new MemoryStream();
@@ -101,8 +102,8 @@ namespace Slaves
                     mStream.Write(objectBytes, 0, objectBytes.Length);
                     mStream.Position = 0;
 
-                    task = binFormatter.Deserialize(mStream) as Tuple<int, int, int, Color>;
-                    if (task.Item1 == -2)
+                    task = binFormatter.Deserialize(mStream) as Int16[];
+                    if (task[0] == -2)
                         selectedFilter = new Tuple<int, int>(-1, 0);
                     else
                     {
