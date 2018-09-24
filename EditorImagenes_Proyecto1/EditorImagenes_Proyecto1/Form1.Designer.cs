@@ -65,14 +65,13 @@
             "Ajuste de brillo",
             "Compresión",
             "Segmentación",
-            "Textura",
             "Gamma",
             "Contraste",
             "Chaos",
             "Wrinkle Texture",
             "Distorción"});
             this.cmbFilters.Location = new System.Drawing.Point(98, 43);
-            this.cmbFilters.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmbFilters.Margin = new System.Windows.Forms.Padding(2);
             this.cmbFilters.Name = "cmbFilters";
             this.cmbFilters.Size = new System.Drawing.Size(172, 27);
             this.cmbFilters.TabIndex = 2;
@@ -94,7 +93,7 @@
             // 
             this.btnGenerateImg.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGenerateImg.Location = new System.Drawing.Point(52, 176);
-            this.btnGenerateImg.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnGenerateImg.Margin = new System.Windows.Forms.Padding(2);
             this.btnGenerateImg.Name = "btnGenerateImg";
             this.btnGenerateImg.Size = new System.Drawing.Size(148, 30);
             this.btnGenerateImg.TabIndex = 6;
@@ -109,7 +108,7 @@
             this.rdbSequential.Checked = true;
             this.rdbSequential.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rdbSequential.Location = new System.Drawing.Point(75, 141);
-            this.rdbSequential.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rdbSequential.Margin = new System.Windows.Forms.Padding(2);
             this.rdbSequential.Name = "rdbSequential";
             this.rdbSequential.Size = new System.Drawing.Size(91, 23);
             this.rdbSequential.TabIndex = 4;
@@ -123,7 +122,7 @@
             this.rdbParallelism.BackColor = System.Drawing.Color.Transparent;
             this.rdbParallelism.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rdbParallelism.Location = new System.Drawing.Point(196, 141);
-            this.rdbParallelism.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rdbParallelism.Margin = new System.Windows.Forms.Padding(2);
             this.rdbParallelism.Name = "rdbParallelism";
             this.rdbParallelism.Size = new System.Drawing.Size(102, 23);
             this.rdbParallelism.TabIndex = 5;
@@ -147,7 +146,7 @@
             // 
             this.slider.BackColor = System.Drawing.Color.Linen;
             this.slider.Location = new System.Drawing.Point(77, 3);
-            this.slider.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.slider.Margin = new System.Windows.Forms.Padding(2);
             this.slider.Maximum = 64;
             this.slider.Minimum = -64;
             this.slider.Name = "slider";
@@ -219,7 +218,7 @@
             // 
             this.txtTime.Enabled = false;
             this.txtTime.Location = new System.Drawing.Point(205, 234);
-            this.txtTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtTime.Margin = new System.Windows.Forms.Padding(2);
             this.txtTime.Name = "txtTime";
             this.txtTime.ReadOnly = true;
             this.txtTime.Size = new System.Drawing.Size(65, 20);
@@ -241,7 +240,7 @@
             this.Controls.Add(this.cmbFilters);
             this.Controls.Add(this.panelCompress);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Image filters OS";

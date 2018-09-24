@@ -118,9 +118,6 @@ namespace EditorImagenes_Proyecto1
                         SequentialImageFilter.segmentationFilter(imagesList, (int)Math.Pow(2, segments));
                     break;
                 case 8:
-                    SequentialImageFilter.texture(imagesList);
-                    break;
-                case 9:
                     if (rdbParallelism.Checked)
                     {
                         FilterMonitor.addBuffer(imagesList);
@@ -129,7 +126,7 @@ namespace EditorImagenes_Proyecto1
                     else
                         SequentialImageFilter.gammaFilter(imagesList, slider.Value);
                     break;
-                case 10:
+                case 9:
                     if (rdbParallelism.Checked)
                     {
                         FilterMonitor.addBuffer(imagesList);
@@ -138,7 +135,7 @@ namespace EditorImagenes_Proyecto1
                     else
                         SequentialImageFilter.contrastFilter(imagesList, slider.Value);
                     break;
-                case 11:
+                case 10:
                     if (rdbParallelism.Checked)
                     {
                         FilterMonitor.addBuffer(imagesList);
@@ -147,7 +144,7 @@ namespace EditorImagenes_Proyecto1
                     else
                         SequentialImageFilter.chaosFilter(imagesList, (slider.Value + 64) * 2);
                     break;
-                case 12:
+                case 11:
                     if (rdbParallelism.Checked)
                     {
                         FilterMonitor.addBuffer(imagesList);
@@ -156,7 +153,7 @@ namespace EditorImagenes_Proyecto1
                     else
                         SequentialImageFilter.wrinkledTexture(imagesList);
                     break;
-                case 13:
+                case 12:
                     int level = (int)(((slider.Value + 64) * 19) / 128f);
                     if (rdbSequential.Checked)
                         SequentialImageFilter.distortionFilter(imagesList, level);
