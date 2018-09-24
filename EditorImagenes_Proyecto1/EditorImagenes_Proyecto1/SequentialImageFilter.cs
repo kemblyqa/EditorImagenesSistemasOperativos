@@ -77,7 +77,6 @@ namespace EditorImagenes_Proyecto1
                         bitmap.SetPixel(x, y, PixelFilters.grayScaleFilter(bitmap.GetPixel(x, y)));
                     }
                 }
-                //save (write) sepia image
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
@@ -98,17 +97,10 @@ namespace EditorImagenes_Proyecto1
                         bitmap.SetPixel(x, y, PixelFilters.brightnessFilter(bitmap.GetPixel(x, y), brightPercentage / 100));
                     }
                 }
-                //save (write) sepia image
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
-
-        //texture **
-        public static void texture(string[] imagesList)
-        {
-
-        }
-
+        
         /// <summary>
         /// Function where we will apply the sepia filter to the loaded image
         /// </summary>
@@ -131,7 +123,6 @@ namespace EditorImagenes_Proyecto1
                         bmp.SetPixel(x, y, PixelFilters.sepiaFilter(bmp.GetPixel(x, y)));
                     }
                 }
-                //save (write) sepia image
                 bmp.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
@@ -148,7 +139,6 @@ namespace EditorImagenes_Proyecto1
                     {
                         product.SetPixel(x, y, PixelFilters.opacityFilter(img.GetPixel(x, y), opacity));
                     }
-                //save (write) sepia image, i mean, opacity image
                 product.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
@@ -165,7 +155,6 @@ namespace EditorImagenes_Proyecto1
                     {
                         product.SetPixel(x, y, PixelFilters.segmentationFilter(img.GetPixel(x, y), segmentSize));
                     }
-                //save (write) segmented image
                 product.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
@@ -181,7 +170,6 @@ namespace EditorImagenes_Proyecto1
                     {
                         product.SetPixel(x, y, PixelFilters.Gauss(ref img, x, y, radious));
                     }
-                //save (write) gaussian image
                 product.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
@@ -204,7 +192,6 @@ namespace EditorImagenes_Proyecto1
                         bitmap.SetPixel(x, y, PixelFilters.gammaFilter(bitmap.GetPixel(x, y), gammaPercentage));
                     }
                 }
-                //save (write) sepia image
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
@@ -227,7 +214,6 @@ namespace EditorImagenes_Proyecto1
                         bitmap.SetPixel(x, y, PixelFilters.contrastFilter(bitmap.GetPixel(x, y), contrastPercentage));
                     }
                 }
-                //save (write) sepia image
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
@@ -244,7 +230,6 @@ namespace EditorImagenes_Proyecto1
                         bitmap.SetPixel(x, y, PixelFilters.sumFilter(bitmap.GetPixel(x, y), 0, r.Next(0, chaosLvl), r.Next(0, chaosLvl), r.Next(0, chaosLvl)));
                     }
                 }
-                //save (write) sepia image
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
@@ -283,7 +268,10 @@ namespace EditorImagenes_Proyecto1
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }
-        ///
+        /// <summary>
+        /// set a texture like is a wrinkled image
+        /// </summary>
+        /// <param name="imagesList"></param>
         public static void wrinkledTexture(string[] imagesList)
         {
             for (int i = 0; i < imagesList.Length; i++)
@@ -300,7 +288,6 @@ namespace EditorImagenes_Proyecto1
                             ));
                     }
                 }
-                //save (write) sepia image
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -20,6 +21,7 @@ namespace EditorImagenes_Proyecto1
         static BackgroundWorker worker;
         static int data, selectedFilter, selectedValue;
         static Socket handler;
+        Stopwatch sw;
         public Form1()
         {
             worker = new BackgroundWorker();
@@ -32,14 +34,15 @@ namespace EditorImagenes_Proyecto1
             panelCompress.Visible = false;
             
         }
-        
+
         private void btnGenerateImg_Click(object sender, EventArgs e)
         {
-            // images files
+            txtTime.Text = "";
             btnGenerateImg.Enabled = false;
-            string[] imagesList = Directory.GetFiles(@"InputImages\\");            
+            string[] imagesList = Directory.GetFiles(@"InputImages\\");
             FilterMonitor.refresh();
             float percent = 0;
+            sw = Stopwatch.StartNew();
             switch (cmbFilters.SelectedIndex)
             {
                 case 0:
@@ -105,7 +108,7 @@ namespace EditorImagenes_Proyecto1
                     }
                     break;
                 case 7:
-                    int segments = (int)(((slider.Value+64)*7)/128f);
+                    int segments = (int)(((slider.Value + 64) * 7) / 128f);
                     if (rdbParallelism.Checked)
                     {
                         FilterMonitor.addBuffer(imagesList);
@@ -113,9 +116,6 @@ namespace EditorImagenes_Proyecto1
                     }
                     else
                         SequentialImageFilter.segmentationFilter(imagesList, (int)Math.Pow(2, segments));
-                    break;
-                case 8:
-                    SequentialImageFilter.texture(imagesList);
                     break;
                 case 9:
                     if (rdbParallelism.Checked)
@@ -163,17 +163,26 @@ namespace EditorImagenes_Proyecto1
                         FilterMonitor.addBuffer(imagesList);
                         ConcurrentImageFilter.distortionFilter(level);
                     }
-                    break;
+                    break;                
                 default:
                     Console.WriteLine("Error detectado");
                     break;
             }
+            sw.Stop();
+            txtTime.Text =
+                (sw.ElapsedMilliseconds / 60000) +
+                ":" +
+                    (((sw.ElapsedMilliseconds / 1000) % 60 > 9) ? 
+                    "" + (sw.ElapsedMilliseconds / 1000) % 60 :
+                    "0" + (sw.ElapsedMilliseconds / 1000) % 60) + 
+                " s";
             btnGenerateImg.Enabled = true;
         }        
 
         private void cmbFilters_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(cmbFilters.SelectedIndex == 0 
+            txtTime.Text = "";
+            if (cmbFilters.SelectedIndex == 0 
                 || cmbFilters.SelectedIndex == 1 
                 || cmbFilters.SelectedIndex == 3 
                 || cmbFilters.SelectedIndex == 12)

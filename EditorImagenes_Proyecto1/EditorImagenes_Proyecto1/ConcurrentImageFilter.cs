@@ -308,46 +308,6 @@ namespace EditorImagenes_Proyecto1
             });
         }
 
-        /*public static void distortionFilter(int level, string[] imagesList)
-        {
-            Color color;
-            Byte rojo, azul, verde, alpha;
-            Random rndm = new Random();
-            int numRandom;
-
-            Parallel.ForEach(imagesList, imagen =>
-            {
-                using (Bitmap bmp = new Bitmap(imagen))
-                {
-
-                }
-            });
-
-            for (int x = 0; x < bitmap.Width; x++)
-                {
-                    for (int y = 0; y < bitmap.Height; y++)
-                    {
-                        numRandom = rndm.Next(level + 1);
-                        if (y < bitmap.Height - level & x < bitmap.Width - level)
-                        {
-                            rojo = bitmap.GetPixel(x + numRandom, y + numRandom).R;
-                            verde = bitmap.GetPixel(x + numRandom, y + numRandom).G;
-                            azul = bitmap.GetPixel(x + numRandom, y + numRandom).B;
-                            alpha = bitmap.GetPixel(x + numRandom, y + numRandom).A;
-                        }
-                        else
-                        {
-                            rojo = bitmap.GetPixel(x, y).R;
-                            verde = bitmap.GetPixel(x, y).G;
-                            azul = bitmap.GetPixel(x, y).B;
-                            alpha = bitmap.GetPixel(x, y).A;
-                        }
-                        bitmap.SetPixel(x, y, Color.FromArgb(alpha, rojo, verde, azul));
-                    }
-                }
-                bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
-            
-        }*/
         public static void wrinkledTexture()
         {
             Bitmap textureBitmap = new Bitmap(@"texture.jpg");
