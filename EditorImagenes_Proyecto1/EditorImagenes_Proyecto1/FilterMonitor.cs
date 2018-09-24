@@ -81,6 +81,10 @@ namespace EditorImagenes_Proyecto1
                     imageOut[imgTarget].Save(@"OutputImages\\" + Path.GetFileName(imageStr[imgTarget]));
                     Console.WriteLine("Guardado " + imgTarget);
                 }
+                if (imageCounter.Sum() == 0)
+                {
+                    Form1.serving = false;
+                }
             }
             finally
             {
