@@ -180,28 +180,50 @@ namespace EditorImagenes_Proyecto1
             Parallel.For(0, Environment.ProcessorCount,
                    index =>
                    {
-                       int currentImage = -1;
-                       Bitmap img = null;
+                       Bitmap current = null;
+                       int currentIndex = -1;
                        Console.WriteLine("Proceso " + index + " iniciado.");
                        Tuple<int, int, int> pixel = FilterMonitor.getNext();
                        Color nextPixel;
                        while (pixel != null)
                        {
+                           if (currentIndex !=pixel.Item3)
+                           {
+                               currentIndex = pixel.Item3;
+                               lock (FilterMonitor.imageList)
+                                   current = FilterMonitor.imageList[currentIndex].Clone() as Bitmap;
+                           }
                            nextPixel = FilterMonitor.getPixel(pixel.Item1, pixel.Item2, pixel.Item3);
-                           if (currentImage != pixel.Item3 || img == null)
-                           {
-                               currentImage = pixel.Item3;
-                               img = FilterMonitor.imageList[pixel.Item3];
-                           }
-                           else
-                           {
-                               Color newPixel = PixelFilters.Gauss(ref img, pixel.Item1, pixel.Item2, radious);
-                               FilterMonitor.setPixel(
-                                       pixel.Item3,
-                                       newPixel,
-                                       new Tuple<int, int>(pixel.Item1, pixel.Item2));
-                               pixel = FilterMonitor.getNext();
-                           }
+                               Color newPixel;
+                               newPixel = PixelFilters.Gauss(ref current, x: pixel.Item1, y: pixel.Item2, radious: radious);
+                           FilterMonitor.setPixel(
+                                   pixel.Item3,
+                                   newPixel,
+                                   new Tuple<int, int>(pixel.Item1, pixel.Item2));
+                           pixel = FilterMonitor.getNext();
+                       }
+                       Console.WriteLine("Proceso " + index + " terminado.");
+                   });
+        }
+
+        public static void chaosFilter(int chaosLvl)
+        {
+            Parallel.For(0, Environment.ProcessorCount,
+                   index =>
+                   {
+                   Random r = new Random();
+                   Console.WriteLine("Proceso " + index + " iniciado.");
+                       Tuple<int, int, int> pixel = FilterMonitor.getNext();
+                       Color nextPixel;
+                       while (pixel != null)
+                       {
+                           nextPixel = FilterMonitor.getPixel(pixel.Item1, pixel.Item2, pixel.Item3);
+                           Color newPixel = PixelFilters.sumFilter(nextPixel, 0, r.Next(-chaosLvl, chaosLvl), r.Next(-chaosLvl, chaosLvl), r.Next(-chaosLvl, chaosLvl));
+                           FilterMonitor.setPixel(
+                                   pixel.Item3,
+                                   newPixel,
+                                   new Tuple<int, int>(pixel.Item1, pixel.Item2));
+                           pixel = FilterMonitor.getNext();
                        }
                        Console.WriteLine("Proceso " + index + " terminado.");
                    });

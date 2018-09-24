@@ -241,10 +241,9 @@ namespace EditorImagenes_Proyecto1
                 {
                     for (int x = 0; x < bitmap.Width; x++)
                     {
-                        bitmap.SetPixel(x, y, PixelFilters.sumFilter(bitmap.GetPixel(x, y), 0, r.Next(0, chaosLvl), r.Next(0, chaosLvl), r.Next(0, chaosLvl)));
+                        bitmap.SetPixel(x, y, PixelFilters.sumFilter(bitmap.GetPixel(x, y), 0, r.Next(-chaosLvl, chaosLvl), r.Next(-chaosLvl, chaosLvl), r.Next(-chaosLvl, chaosLvl)));
                     }
                 }
-                //save (write) sepia image
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
             }
         }

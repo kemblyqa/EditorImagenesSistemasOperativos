@@ -18,8 +18,9 @@ namespace EditorImagenes_Proyecto1
     public partial class Form1 : Form
     {
         static BackgroundWorker worker;
-        static int data, selectedFilter, selectedValue;
+        static int selectedFilter, selectedValue;
         static Socket handler;
+        static bool serving;
         public Form1()
         {
             worker = new BackgroundWorker();
@@ -27,6 +28,7 @@ namespace EditorImagenes_Proyecto1
             worker.WorkerSupportsCancellation = true;
             selectedFilter = 0;
             selectedValue = -64;
+            serving = false;
             InitializeComponent();
             cmbFilters.SelectedIndex = 0;
             panelCompress.Visible = false;
@@ -39,6 +41,11 @@ namespace EditorImagenes_Proyecto1
             btnGenerateImg.Enabled = false;
             string[] imagesList = Directory.GetFiles(@"InputImages\\");            
             FilterMonitor.refresh();
+            if (serving)
+            {
+                FilterMonitor.addBuffer(imagesList);
+                return;
+            }
             float percent = 0;
             switch (cmbFilters.SelectedIndex)
             {
@@ -84,7 +91,10 @@ namespace EditorImagenes_Proyecto1
                     if (rdbSequential.Checked)
                         SequentialImageFilter.gaussianFilter(imagesList, (int)percent * 5 + 1);
                     else
-                        SequentialImageFilter.gaussianFilter(imagesList, (int)percent * 5 + 1);
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.gauss((int)percent * 5 + 1);
+                    }
                     break;
                 case 5:
                     if (rdbParallelism.Checked)
@@ -139,7 +149,7 @@ namespace EditorImagenes_Proyecto1
                     if (rdbParallelism.Checked)
                     {
                         FilterMonitor.addBuffer(imagesList);
-                        //ConcurrentImageFilter.chaosFilter(slider.Value);
+                        ConcurrentImageFilter.chaosFilter((slider.Value + 64) * 2);
                     }
                     else
                         SequentialImageFilter.chaosFilter(imagesList, (slider.Value + 64) * 2);
@@ -210,21 +220,39 @@ namespace EditorImagenes_Proyecto1
                 while (!worker.CancellationPending)
                 {
                     handler = listener.Accept();
-                    int bytesRec = handler.Receive(bytes);
-                    data = BitConverter.ToInt32(bytes, 0);
-                    if (data.Equals(0))
+                    handler.Receive(bytes);
+
+                    var mStream = new MemoryStream();
+                    var binFormatter = new BinaryFormatter();
+
+                    // Where 'objectBytes' is your byte array.
+                    mStream.Write(bytes, 0, bytes.Length);
+                    mStream.Position = 0;
+                    
+                    Tuple<int,int,int,Color> data = binFormatter.Deserialize(mStream) as Tuple<int,int,int,Color>;
+                    if (data.Item1 == -1)
                     {
                         Tuple<int, int> aux = new Tuple<int, int>(selectedFilter, selectedValue);
-                        var binFormatter = new BinaryFormatter();
-                        var mStream = new MemoryStream();
+                        binFormatter = new BinaryFormatter();
+                        mStream = new MemoryStream();
                         binFormatter.Serialize(mStream, aux);
                         handler.Send(mStream.ToArray());
                     }
                     else
                     {
-                        Tuple<int, List<Color>> aux = new Tuple<int, List<Color>>(data, null);
-                        var binFormatter = new BinaryFormatter();
-                        var mStream = new MemoryStream();
+                        if (data.Item1 != -2)
+                            FilterMonitor.setPixel(data.Item3, data.Item4, new Tuple<int, int>(data.Item1, data.Item2));
+                        Tuple<int, int, int> nextPixel = FilterMonitor.getNext();
+                        Color pixel = Color.FromArgb(0, 0, 0);
+
+                        if (nextPixel != null)
+                            pixel = FilterMonitor.getPixel(nextPixel.Item1, nextPixel.Item2, nextPixel.Item3);
+                        else
+                            nextPixel = new Tuple<int, int, int>(-2, -2, -2);
+
+                        Tuple<int, int, int, Color> aux = new Tuple<int, int, int, Color>(nextPixel.Item1, nextPixel.Item2, nextPixel.Item3, pixel);
+                        binFormatter = new BinaryFormatter();
+                        mStream = new MemoryStream();
                         binFormatter.Serialize(mStream, aux);
                         handler.Send(mStream.ToArray());
                     }
@@ -240,16 +268,13 @@ namespace EditorImagenes_Proyecto1
 
         private void ServeButton_Click(object sender, EventArgs e)
         {
-            if(ServeButton.Text == "Serve")
-            {
-                worker.RunWorkerAsync();
-                ServeButton.Text = "Shutdown";
-            }
-            else
-            {
-                worker.CancelAsync();
-                ServeButton.Text = "Serve";
-            }
+            FilterMonitor.refresh();
+            serving = true;
+            rdbParallelism.Enabled = false;
+            rdbSequential.Enabled = false;
+            rdbParallelism.Checked = true;
+            ServeButton.Visible = false;
+            worker.RunWorkerAsync();
         }
 
         private void slider_Scroll(object sender, EventArgs e)
