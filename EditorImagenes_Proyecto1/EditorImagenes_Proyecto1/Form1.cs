@@ -165,14 +165,13 @@ namespace EditorImagenes_Proyecto1
                         SequentialImageFilter.wrinkledTexture(imagesList);
                     break;
                 case 12:
-                    int level = (int)(((slider.Value + 64) * 19) / 128f);
-                    
+                    int level = (int)(((slider.Value + 64) * 50) / 128f);
                     if (rdbSequential.Checked)
                         SequentialImageFilter.distortionFilter(imagesList, level);
                     else
                     {
                         FilterMonitor.addBuffer(imagesList);
-                        ConcurrentImageFilter.distortionFilter(level);
+                        ConcurrentImageFilter.distortionFilter();
                     }
                     break;
                 case 13:
@@ -199,8 +198,8 @@ namespace EditorImagenes_Proyecto1
             txtTime.Text = "";
             if (cmbFilters.SelectedIndex == 0 
                 || cmbFilters.SelectedIndex == 1 
-                || cmbFilters.SelectedIndex == 3
-                || cmbFilters.SelectedIndex == 13)
+                || cmbFilters.SelectedIndex == 3 
+                || cmbFilters.SelectedIndex == 11)
             {
                 panelCompress.Visible = false;
             }
