@@ -73,7 +73,6 @@ namespace Slaves
         }
         private void connectionWork(object sender, DoWorkEventArgs e)
         {
-            Int16[] task = new Int16[7] { -2, -2, -2, 255, 255, 255, 255 };
             while (!worker.CancellationPending)
             {
                 if (selectedFilter.Item1 == -1)
@@ -92,25 +91,86 @@ namespace Slaves
                 }
                 else
                 {
-                    byte[] objectBytes = sendMsg(task);
-                    if (objectBytes == null)
-                        continue;
-                    var mStream = new MemoryStream();
-                    var binFormatter = new BinaryFormatter();
+                    Object connection = new object();
+                    Object counter = new object();
+                    Parallel.For(0, Environment.ProcessorCount, index => {
+                        Int16[] task = new Int16[7] { -2, -2, -2, 255, 255, 255, 255 };
+                        while (true)
+                        {
+                            byte[] objectBytes;
+                            Color newPixel = Color.FromArgb(255, 255, 255);
+                            if (task[0] != -2)
+                            {
+                                Random r = new Random();
+                                Color oldPixel = Color.FromArgb(task[3], task[4], task[5], task[6]);
+                                switch (selectedFilter.Item1)
+                                {
+                                    case 0:
+                                        newPixel = PixelFilters.grayScaleFilter(oldPixel);
+                                        break;
+                                    case 1: // sepia
+                                        newPixel = PixelFilters.sepiaFilter(oldPixel);
+                                        break;
+                                    case 2:
+                                        newPixel = PixelFilters.opacityFilter(oldPixel, 1f - (selectedFilter.Item2 + 64) / 128f);
+                                        break;
+                                    case 3: // invest colors
+                                        newPixel = PixelFilters.investColorFilter(oldPixel);
+                                        break;
+                                    case 5:
+                                        newPixel = PixelFilters.brightnessFilter(oldPixel, selectedFilter.Item2);
+                                        break;
+                                    case 7:
+                                        int segments = (int)(((selectedFilter.Item2 + 64) * 7) / 128f);
+                                        newPixel = PixelFilters.segmentationFilter(oldPixel, (int)Math.Pow(2, segments));
+                                        break;
+                                    case 8:
+                                        newPixel = PixelFilters.gammaFilter(oldPixel, selectedFilter.Item2);
+                                        break;
+                                    case 9:
+                                        newPixel = PixelFilters.contrastFilter(oldPixel, selectedFilter.Item2);
+                                        break;
+                                    case 10:
+                                        int chaosLvl = (selectedFilter.Item2 + 64) * 2;
+                                        newPixel = PixelFilters.sumFilter(oldPixel, 0, r.Next(-chaosLvl, chaosLvl), r.Next(-chaosLvl, chaosLvl), r.Next(-chaosLvl, chaosLvl));
+                                        break;
+                                    case 13:
+                                        newPixel = PixelFilters.redFilter(oldPixel);
+                                        break;
+                                }
+                            }
+                            task[3] = newPixel.A;
+                            task[4] = newPixel.R;
+                            task[5] = newPixel.G;
+                            task[6] = newPixel.B;
+                            lock (connection)
+                                objectBytes = sendMsg(task);
+                            if (objectBytes == null)
+                                continue;
+                            var mStream = new MemoryStream();
+                            var binFormatter = new BinaryFormatter();
 
-                    // Where 'objectBytes' is your byte array.
-                    mStream.Write(objectBytes, 0, objectBytes.Length);
-                    mStream.Position = 0;
+                            // Where 'objectBytes' is your byte array.
+                            mStream.Write(objectBytes, 0, objectBytes.Length);
+                            mStream.Position = 0;
 
-                    task = binFormatter.Deserialize(mStream) as Int16[];
-                    if (task[0] == -2)
-                        selectedFilter = new Tuple<int, int>(-1, 0);
-                    else
-                    {
-                        c++;
-                        if(c%1000==0)
-                            pixels.Text = c + " Pixeles en este esclavo";
-                    }
+                            task = binFormatter.Deserialize(mStream) as Int16[];
+                            if (task[0] == -2)
+                            {
+                                lock (selectedFilter)
+                                    selectedFilter = new Tuple<int, int>(-1, 0);
+                                break;
+                            }
+                            else
+                                lock (counter)
+                                {
+                                    c++;
+                                    if (c % 1000 == 0)
+                                        pixels.Text = c + " Pixeles en este esclavo";
+                                }
+                        }
+                        Console.WriteLine("Proceso " + index + " terminado");
+                    });
                 }
             }
         }
