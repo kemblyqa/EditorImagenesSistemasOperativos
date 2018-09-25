@@ -91,11 +91,51 @@ namespace EditorImagenes_Proyecto1
                 Monitor.Exit(imageOut);
             }
         }
+        public static void setPixels(short[] data)
+        {
+            for (int x = 0; x * 7 < data.Length; x++)
+                setPixel(
+                    data[(x * 7) + 2],
+                    Color.FromArgb(
+                        data[(x * 7) + 3],
+                        data[(x * 7) + 4],
+                        data[(x * 7) + 5],
+                        data[(x * 7) + 6]),
+                    new Tuple<int, int>(
+                        data[x * 7],
+                        data[(x * 7) + 1]));
+        }
         //Obtiene un pixel
         public static Color getPixel(int x, int y, int img)
         {
             lock(imageList)
                 return imageList[img].GetPixel(x, y);
+        }
+        public static short[] getNexts()
+        {
+            List<short[]> buffer = new List<short[]>();
+            while (buffer.Count < 20)
+            {
+                Tuple<int, int, int> aux = getNext();
+                if (aux == null)
+                    break;
+                Color pixel = getPixel(aux.Item1, aux.Item2, aux.Item3);
+                buffer.Add(new Int16[7] {
+                    (short)aux.Item1,
+                    (short)aux.Item2,
+                    (short)aux.Item3,
+                    pixel.A,
+                    pixel.R,
+                    pixel.G,
+                    pixel.B });
+            }
+            short[] msg = new short[7 * buffer.Count];
+            for (int x = 0; x < buffer.Count; x++)
+                for (int y = 0; y < 7; y++)
+                    msg[x * 7 + y] = buffer[x][y];
+            if (msg.Length == 0)
+                return new short[1] { -1 };
+            return msg;
         }
         //Obtiene el ancho y alto de una imagen objetivo
         public static Tuple<int,int> getDimentions(int imgTarget)

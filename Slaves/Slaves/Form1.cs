@@ -17,14 +17,16 @@ namespace Slaves
     public partial class Form1 : Form
     {
         bool connected, validIP, validPORT;
-        IPAddress ipAddress;
-        int port;
+        static IPAddress ipAddress;
+        static int port;
         long c;
-        Socket socketCon;
+        static Socket socketCon;
         BackgroundWorker worker;
         Tuple<int, int> selectedFilter;
+        static Object socketLink = new object();
         public Form1()
         {
+            LocalMonitor.init();
             connected = false;
             ipAddress = null;
             worker = new BackgroundWorker();
@@ -45,31 +47,31 @@ namespace Slaves
             validPORT = port > 1 && port < 65535;
             Connection.Enabled = validIP && validPORT;
         }
-        private byte[] sendMsg(Int16[] msg)
+        public static byte[] sendMsg(Int16[] msg)
         {
-            socketCon = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            byte[] bytes;
-            try
-            {
-                socketCon.Connect(new IPEndPoint(ipAddress, port));
+            byte[] bytes = null;
+            lock (socketLink)
+                try
+                {
+                    socketCon = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                    socketCon.Connect(new IPEndPoint(ipAddress, port));
 
-                BinaryFormatter binFormatter = new BinaryFormatter();
-                MemoryStream mStream = new MemoryStream();
+                    BinaryFormatter binFormatter = new BinaryFormatter();
+                    MemoryStream mStream = new MemoryStream();
 
-                binFormatter.Serialize(mStream, msg);
+                    binFormatter.Serialize(mStream, msg);
 
-                socketCon.Send(mStream.ToArray());
-                bytes = new byte[1024];
-                socketCon.Receive(bytes);
-            }
-            catch (Exception e)
-            {
-                socketCon.Shutdown(SocketShutdown.Both);
-                socketCon.Close();
-                return null;
-            }
-
+                    socketCon.Send(mStream.ToArray());
+                    bytes = new byte[1024];
+                    socketCon.Receive(bytes);
+                    socketCon.Shutdown(SocketShutdown.Both);
+                    socketCon.Close();
+                }
+                catch (Exception e)
+                {
+                }
             return bytes;
+            
         }
         private void connectionWork(object sender, DoWorkEventArgs e)
         {
@@ -77,7 +79,7 @@ namespace Slaves
             {
                 if (selectedFilter.Item1 == -1)
                 {
-                    byte[] objectBytes = sendMsg(new Int16[7] { -1, -1, -1, 255, 0, 0, 0 });
+                    byte[] objectBytes = sendMsg(new Int16[1] { -1 });
                     if (objectBytes == null)
                         continue;
                     var mStream = new MemoryStream();
@@ -91,14 +93,14 @@ namespace Slaves
                 }
                 else
                 {
-                    Object connection = new object();
                     Object counter = new object();
                     Parallel.For(0, Environment.ProcessorCount, index => {
-                        Int16[] task = new Int16[7] { -2, -2, -2, 255, 255, 255, 255 };
+                        Int16[] task = new Int16[1] { -2 };
                         while (true)
                         {
                             byte[] objectBytes;
                             Color newPixel = Color.FromArgb(255, 255, 255);
+                            task = LocalMonitor.getNext();
                             if (task[0] != -2)
                             {
                                 Random r = new Random();
@@ -138,36 +140,25 @@ namespace Slaves
                                         newPixel = PixelFilters.redFilter(oldPixel);
                                         break;
                                 }
-                            }
-                            task[3] = newPixel.A;
-                            task[4] = newPixel.R;
-                            task[5] = newPixel.G;
-                            task[6] = newPixel.B;
-                            lock (connection)
-                                objectBytes = sendMsg(task);
-                            if (objectBytes == null)
-                                continue;
-                            var mStream = new MemoryStream();
-                            var binFormatter = new BinaryFormatter();
+                                task[3] = newPixel.A;
+                                task[4] = newPixel.R;
+                                task[5] = newPixel.G;
+                                task[6] = newPixel.B;
+                                LocalMonitor.addBuffer(task);
 
-                            // Where 'objectBytes' is your byte array.
-                            mStream.Write(objectBytes, 0, objectBytes.Length);
-                            mStream.Position = 0;
-
-                            task = binFormatter.Deserialize(mStream) as Int16[];
-                            if (task[0] == -2)
-                            {
-                                lock (selectedFilter)
-                                    selectedFilter = new Tuple<int, int>(-1, 0);
-                                break;
-                            }
-                            else
                                 lock (counter)
                                 {
                                     c++;
                                     if (c % 1000 == 0)
                                         pixels.Text = c + " Pixeles en este esclavo";
                                 }
+                            }
+                            else
+                            {
+                                lock (selectedFilter)
+                                    selectedFilter = new Tuple<int, int>(-1, 0);
+                                break;
+                            }
                         }
                         Console.WriteLine("Proceso " + index + " terminado");
                     });

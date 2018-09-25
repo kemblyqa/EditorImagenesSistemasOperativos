@@ -274,6 +274,8 @@ namespace EditorImagenes_Proyecto1
                     mStream.Position = 0;
 
                     Int16[] data = binFormatter.Deserialize(mStream) as Int16[];
+                    if (data == null)
+                        continue;
                     if (data[0] == -1)
                     {
                         Tuple<int, int> aux = new Tuple<int, int>(selectedFilter, selectedValue);
@@ -284,27 +286,14 @@ namespace EditorImagenes_Proyecto1
                     }
                     else
                     {
+                        short[] nextPixels = new short[1] { -1 };
                         if (data[0] != -2)
-                            FilterMonitor.setPixel(data[2], Color.FromArgb(data[3], data[4], data[5], data[6]), new Tuple<int, int>(data[0], data[1]));
-                        Tuple<int, int, int> nextPixel = FilterMonitor.getNext();
-                        Color pixel = Color.FromArgb(0, 0, 0);
-
-                        if (nextPixel != null)
-                            pixel = FilterMonitor.getPixel(nextPixel.Item1, nextPixel.Item2, nextPixel.Item3);
+                            FilterMonitor.setPixels(data);
                         else
-                            nextPixel = new Tuple<int, int, int>(-2, -2, -2);
-
-                        Int16[] aux = new Int16[7] {
-                            (Int16)nextPixel.Item1,
-                            (Int16)nextPixel.Item2,
-                            (Int16)nextPixel.Item3,
-                            pixel.A,
-                            pixel.R,
-                            pixel.G,
-                            pixel.B};
+                            nextPixels = FilterMonitor.getNexts();
                         binFormatter = new BinaryFormatter();
                         mStream = new MemoryStream();
-                        binFormatter.Serialize(mStream, aux);
+                        binFormatter.Serialize(mStream, nextPixels);
                         handler.Send(mStream.ToArray());
                     }
                 }
