@@ -175,7 +175,14 @@ namespace EditorImagenes_Proyecto1
                     }
                     break;
                 case 13:
-                    SequentialImageFilter.redFilter(imagesList);
+                    int redLevel = (int)(((slider.Value + 64) * 100) / 128f);
+                    if (rdbSequential.Checked)
+                        SequentialImageFilter.redFilter(imagesList, redLevel);
+                    else
+                    {
+                        FilterMonitor.addBuffer(imagesList);
+                        ConcurrentImageFilter.redFilter(redLevel);
+                    }
                     break;
                 default:
                     Console.WriteLine("Error detectado");

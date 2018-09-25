@@ -299,15 +299,9 @@ namespace EditorImagenes_Proyecto1
                 (int)(pixel.B * (texturePixel.B / 255f))
             );
         }
-        public static Color redFilter(Color pixel)
+        public static Color redFilter(Color pixel, int level)
         {
-            int cantidadBytes = -1*(pixel.R-230);
-            return Color.FromArgb(
-                pixel.A,
-                pixel.R + cantidadBytes,
-                pixel.G,
-                pixel.B
-                );
+            return Color.FromArgb(pixel.A, 255*(level/100), pixel.G, pixel.B);
         }
 
     }
