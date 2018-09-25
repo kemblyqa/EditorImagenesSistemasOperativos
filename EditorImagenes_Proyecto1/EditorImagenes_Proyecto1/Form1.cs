@@ -23,7 +23,7 @@ namespace EditorImagenes_Proyecto1
         static Socket handler;
         public static bool serving;
         Stopwatch sw;
-        int fixedTimeSeconds;
+        int[] fixedTime;
         List<int> netBannedFilters = new List<int>() { 4, 6, 11, 12 };
         public Form1()
         {
@@ -36,7 +36,7 @@ namespace EditorImagenes_Proyecto1
             InitializeComponent();
             cmbFilters.SelectedIndex = 0;
             panelCompress.Visible = false;
-            
+            fixedTime = new int[3];
         }
 
         private void btnGenerateImg_Click(object sender, EventArgs e)
@@ -181,7 +181,14 @@ namespace EditorImagenes_Proyecto1
                         }
                         break;
                     case 13:
-                        SequentialImageFilter.redFilter(imagesList);
+                        int redLevel = (int)(((slider.Value + 64) * 100) / 128f);
+                        if (rdbSequential.Checked)
+                            SequentialImageFilter.redFilter(imagesList, redLevel);
+                        else
+                        {
+                            FilterMonitor.addBuffer(imagesList);
+                            ConcurrentImageFilter.redFilter(redLevel);
+                        }
                         break;
                     default:
                         Console.WriteLine("Error detectado");
@@ -190,14 +197,21 @@ namespace EditorImagenes_Proyecto1
             cmbFilters.Enabled = true;
             serving = !ServeButton.Visible;
             sw.Stop();
-            fixedTimeSeconds = (int)(sw.ElapsedMilliseconds / 1000) % 60;
+            fixedTime[2] = (int)(sw.ElapsedMilliseconds / 1000) % 60;
+            fixedTime[1] = (int)(sw.ElapsedMilliseconds / 60000);
+            fixedTime[0] = (fixedTime[2] / 3600);
             txtTime.Text =
-                (sw.ElapsedMilliseconds / 60000) +
+                    ((fixedTime[0] > 0) ?
+                        "" + fixedTime[0] :
+                        "0" + fixedTime[0]) +
                 ":" +
-                    ((fixedTimeSeconds > 9) ? 
-                    "" + fixedTimeSeconds :
-                    "0" + fixedTimeSeconds) + 
-                " s";
+                     ((fixedTime[1] > 9) ?
+                        "" + fixedTime[1] :
+                        "0" + fixedTime[1]) +
+                ":" +
+                    ((fixedTime[2] > 9) ? 
+                    "" + fixedTime[2] :
+                    "0" + fixedTime[2]);
             btnGenerateImg.Enabled = true;
         }        
 

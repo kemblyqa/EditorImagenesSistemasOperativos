@@ -354,7 +354,7 @@ namespace EditorImagenes_Proyecto1
             );
         }
 
-        public static void redFilter()
+        public static void redFilter(int level)
         {
             Parallel.For(0, Environment.ProcessorCount,
                    index =>
@@ -365,7 +365,7 @@ namespace EditorImagenes_Proyecto1
                        while (pixel != null)
                        {
                            nextPixel = FilterMonitor.getPixel(pixel.Item1, pixel.Item2, pixel.Item3);
-                           Color newPixel = PixelFilters.redFilter(nextPixel);
+                           Color newPixel = PixelFilters.redFilter(nextPixel, level);
                            FilterMonitor.setPixel(
                                    pixel.Item3,
                                    newPixel,

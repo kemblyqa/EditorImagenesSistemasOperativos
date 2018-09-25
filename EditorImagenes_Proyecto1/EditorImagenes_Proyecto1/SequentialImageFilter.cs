@@ -292,7 +292,7 @@ namespace EditorImagenes_Proyecto1
             }
         }
 
-        public static void redFilter(string[] imagesList)
+        public static void redFilter(string[] imagesList, int level)
         {
             for (int i = 0; i < imagesList.Length; i++)
             {
@@ -301,7 +301,7 @@ namespace EditorImagenes_Proyecto1
                 {
                     for (int x = 0; x < bitmap.Width; x++)
                     {
-                        bitmap.SetPixel(x, y, PixelFilters.redFilter(bitmap.GetPixel(x, y)));
+                        bitmap.SetPixel(x, y, PixelFilters.redFilter(bitmap.GetPixel(x, y), level));
                     }
                 }
                 bitmap.Save(@"OutputImages\\" + Path.GetFileName(imagesList[i]));
